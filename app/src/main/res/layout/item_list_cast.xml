@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginRight="8dp"
+    android:background="@color/black">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_cast"
+        android:layout_width="120dp"
+        android:layout_height="115dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/empty_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="center"
+        android:text="Dwayne Johnson"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/img_cast"
+        app:layout_constraintStart_toStartOf="@+id/img_cast"
+        app:layout_constraintTop_toBottomOf="@+id/img_cast" />
+
+    <TextView
+        android:id="@+id/tv_character"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Black Adam"
+        android:textColor="@color/soft_grey"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
