@@ -5,7 +5,8 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
 }
- def API_KEY = '"30fe988576e4297525ce9cccb06023a3"'
+
+def API_KEY = '"YOUR_API_KEY"'
 
 android {
     namespace 'com.difa.myapplication'

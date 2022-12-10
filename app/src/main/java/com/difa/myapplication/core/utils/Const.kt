@@ -16,4 +16,4 @@ const val EXTRA_TV = "extra_tv"
 
 const val EXTRA_DETAIL = "extra_detail"
 
-const val SPLASH_TIME = 500L
+const val SPLASH_TIME = 1000L
