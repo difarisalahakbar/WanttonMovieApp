@@ -2,7 +2,7 @@
 
 <p align="center">
 
-Wantton is a Movie App to view information about Movies or Tv Series. This project has been made just for practice my coding skills. 
+Wantton is an Movie App to see the information about Movies or Tv Series. This project has been made just for practice my coding skills. 
 
 <img src="/SS/ss1.png" />
 <img src="/SS/ss2.png" />  
