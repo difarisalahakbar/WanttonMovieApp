@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -22,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/cd_image_movie"
             android:scaleType="centerCrop"
             android:src="@drawable/empty" />
     </androidx.cardview.widget.CardView>
@@ -31,7 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="All Quiet on the Western Front"
+        android:text="@string/all_quiet_on_the_western_front"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/cardView"
@@ -40,6 +40,7 @@
     <ImageView
         android:id="@+id/star"
         android:layout_width="16dp"
+        android:contentDescription="@string/cd_star"
         android:layout_height="16dp"
         android:src="@drawable/ic_baseline_star_rate_24"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +50,7 @@
         android:id="@+id/tv_rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="7.3"
+        android:text="@string/rate"
         android:textColor="@color/soft_grey"
         android:layout_marginLeft="2dp"
         android:textSize="12sp"
@@ -62,6 +63,7 @@
         android:layout_height="2dp"
         android:layout_marginLeft="6dp"
         android:src="@drawable/dot"
+        android:contentDescription="@string/cd_dot"
         app:layout_constraintBottom_toBottomOf="@+id/tv_year"
         app:layout_constraintStart_toEndOf="@+id/tv_rate"
         app:layout_constraintTop_toTopOf="@+id/tv_rate" />
@@ -71,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
-        android:text="2016"
+        android:text="@string/year"
         android:textColor="@color/soft_grey"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/dot"

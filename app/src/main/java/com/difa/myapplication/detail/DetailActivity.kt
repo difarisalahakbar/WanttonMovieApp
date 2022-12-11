@@ -259,11 +259,11 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setDesign(state: Boolean){
         if(state){
-            binding.btnFavorite.text = "Remove from Favorite"
+            binding.btnFavorite.text = getString(R.string.remove_favorite)
             binding.btnFavorite.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_grey))
             binding.btnFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_remove_24, 0, 0, 0)
         }else{
-            binding.btnFavorite.text ="Add to Favorite"
+            binding.btnFavorite.text =getString(R.string.add_favorite)
             binding.btnFavorite.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
             binding.btnFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_add_24, 0, 0, 0)
         }

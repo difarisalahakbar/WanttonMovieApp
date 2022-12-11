@@ -11,6 +11,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginBottom="32dp"
+        android:contentDescription="@string/cd_error"
         android:src="@drawable/search_illustration"
         app:layout_constraintBottom_toTopOf="@+id/tv_error_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +21,7 @@
         android:id="@+id/tv_error_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Search Movie or Tv Series"
+        android:text="@string/search_movie_or_tv_series"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -31,7 +32,6 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
-        android:id="@+id/tv_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

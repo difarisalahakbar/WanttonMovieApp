@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.difa.myapplication.R
 import com.difa.myapplication.core.ui.ShowAllAdapter
 import com.difa.myapplication.core.utils.EXTRA_DETAIL
 import com.difa.myapplication.databinding.FragmentFavoriteBinding
@@ -52,7 +53,7 @@ class FavoriteFragment : Fragment() {
     private fun setupFavorite() {
         favoriteViewModel.getAllFavorite().observe(viewLifecycleOwner){
             adapter.setList(it)
-            binding.viewEmpty.tvError.text = "You haven't added any favorite shows"
+            binding.viewEmpty.tvError.text = getString(R.string.empty_favorite)
             binding.viewEmpty.root.visibility =
                 if (it.isNotEmpty()) View.GONE else View.VISIBLE
         }

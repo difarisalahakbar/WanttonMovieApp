@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
+import com.difa.myapplication.R
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.ui.ShowAllAdapter
@@ -70,7 +71,7 @@ class AllMoviesActivity : AppCompatActivity() {
         with(binding) {
             nestedScrollMovie.setOnScrollChangeListener(
                 NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
-                    val height = (v.getChildAt(0)?.measuredHeight ?: 0) - (v.measuredHeight ?: 0)
+                    val height = (v.getChildAt(0)?.measuredHeight ?: 0) - v.measuredHeight
                     if (scrollY == height) {
                         if (currentPage < maxPage) {
                             moviesViewModel.setPage(++currentPage)
@@ -84,7 +85,7 @@ class AllMoviesActivity : AppCompatActivity() {
 
         when (intent.getIntExtra(EXTRA_MOVIE, 0)) {
             POPULAR -> {
-                binding.tvNowPlaying.text = "Popular"
+                binding.tvNowPlaying.text = getString(R.string.popular)
                 moviesViewModel.getAllMovie(POPULAR, limit).observe(this) { movieList ->
                     when (movieList) {
                         is Resource.Loading -> {
@@ -95,7 +96,7 @@ class AllMoviesActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
 
                             val data = movieList.data as ArrayList<ShowModel>
-                            if (!data.isNullOrEmpty()) {
+                            if (!data.isEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -108,7 +109,7 @@ class AllMoviesActivity : AppCompatActivity() {
                 }
             }
             TOP_RATED -> {
-                binding.tvNowPlaying.text = "Top Rated"
+                binding.tvNowPlaying.text = getString(R.string.top_rated)
                 moviesViewModel.getAllMovie(TOP_RATED, limit).observe(this) { movieList ->
                     when (movieList) {
                         is Resource.Loading -> {
@@ -118,7 +119,7 @@ class AllMoviesActivity : AppCompatActivity() {
                         is Resource.Success -> {
                             binding.progressBar.visibility = View.GONE
                             val data = movieList.data as ArrayList<ShowModel>
-                            if (!data.isNullOrEmpty()) {
+                            if (!data.isEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -141,7 +142,7 @@ class AllMoviesActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
 
                             val data = movieList.data as ArrayList<ShowModel>
-                            if (!data.isNullOrEmpty()) {
+                            if (!data.isEmpty()) {
                                 adapter.setList(data)
                             }
                         }

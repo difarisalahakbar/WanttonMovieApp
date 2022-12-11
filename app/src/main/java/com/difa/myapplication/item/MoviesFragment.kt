@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.difa.myapplication.R
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.ui.ShowAdapter
 import com.difa.myapplication.core.utils.*
@@ -35,7 +36,7 @@ class MoviesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
@@ -119,7 +120,7 @@ class MoviesFragment : Fragment() {
                         binding.shimmerNowPlaying.visibility = View.GONE
                         binding.viewError.root.visibility = View.VISIBLE
                         val errorMessage = showModel.message
-                        if (errorMessage!!.contains("Unable to resolve host")){
+                        if (errorMessage!!.contains(getString(R.string.unable_to_resolve))){
                             binding.viewError.tvError.text = "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
                         }else{
                             binding.viewError.tvError.text = "$errorMessage"

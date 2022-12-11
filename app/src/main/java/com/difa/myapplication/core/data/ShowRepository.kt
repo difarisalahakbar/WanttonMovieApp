@@ -248,7 +248,7 @@ class ShowRepository @Inject constructor(
             }
 
             override fun emptyResult(): Flow<List<ShowModel>> {
-                return flow { emit(emptyList<ShowModel>()) }
+                return flow { emit(emptyList()) }
             }
 
 

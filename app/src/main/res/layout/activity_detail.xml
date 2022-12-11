@@ -20,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="238dp"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/cd_timeline"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
+                    android:contentDescription="@string/cd_image_movie"
                     android:scaleType="centerCrop"
                     android:src="@drawable/empty" />
             </androidx.cardview.widget.CardView>
@@ -55,7 +57,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:text="Joker"
+                android:text="@string/joker"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -69,6 +71,7 @@
                 android:layout_height="19dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="4dp"
+                android:contentDescription="@string/cd_star"
                 android:src="@drawable/ic_baseline_star_rate_24"
                 app:layout_constraintStart_toEndOf="@+id/card_movie"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title" />
@@ -78,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:text="8.3"
+                android:text="@string/rate"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="@+id/imageView2" />
@@ -105,10 +108,10 @@
                     android:layout_height="2dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"
+                    android:contentDescription="@string/cd_dot"
                     android:src="@drawable/dot" />
 
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -116,11 +119,11 @@
                     android:textColor="@color/soft_grey" />
 
                 <ImageView
-                    android:id="@+id/dot2"
                     android:layout_width="2dp"
                     android:layout_height="2dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"
+                    android:contentDescription="@string/cd_dot"
                     android:src="@drawable/dot" />
 
                 <TextView
@@ -141,7 +144,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
                 <TextView
-                    android:id="@+id/tv_genre_1"
+                    android:id="@+id/tv_genre1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -149,16 +152,17 @@
                     android:textColor="@color/soft_grey" />
 
                 <ImageView
-                    android:id="@+id/dot6"
+                    android:id="@+id/dot_6"
                     android:layout_width="2dp"
                     android:layout_height="2dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"
+                    android:contentDescription="@string/cd_dot"
                     android:src="@drawable/dot"
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/tv_genre_2"
+                    android:id="@+id/tv_genre2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -167,16 +171,17 @@
                     android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/dot7"
+                    android:id="@+id/dot_7"
                     android:layout_width="2dp"
                     android:layout_height="2dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"
+                    android:contentDescription="@string/cd_dot"
                     android:src="@drawable/dot"
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/tv_genre_3"
+                    android:id="@+id/tv_genre3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -249,9 +254,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="11dp"
-                android:scrollbars="none"
                 android:layout_marginBottom="16dp"
-                 app:layout_constraintStart_toStartOf="parent"
+                android:scrollbars="none"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/actor" />
 
             <TextView
@@ -272,9 +277,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:scrollbars="none"
                 android:layout_marginTop="11dp"
                 android:layout_marginBottom="16dp"
+                android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_similar" />
@@ -298,6 +303,7 @@
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/cd_back"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
         </androidx.appcompat.widget.Toolbar>

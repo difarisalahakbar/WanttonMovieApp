@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.difa.myapplication.R
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.ui.ShowSearchAdapter
 import com.difa.myapplication.core.utils.EXTRA_DETAIL
@@ -112,7 +113,7 @@ class SearchFragment : Fragment() {
                         adapter.setList(searchShow.data)
                         if (searchShow.data!!.isEmpty()) {
                             binding.viewEmpty.root.visibility = View.VISIBLE
-                            binding.viewEmpty.tvError.text = "Show not found."
+                            binding.viewEmpty.tvError.text = getString(R.string.not_found)
                         }
                     }
                     is Resource.Error -> {
@@ -120,7 +121,7 @@ class SearchFragment : Fragment() {
                         binding.viewError.root.visibility = View.VISIBLE
                         binding.viewEmpty.root.visibility = View.GONE
                         val errorMessage = searchShow.message
-                        if (errorMessage!!.contains("Unable to resolve host")) {
+                        if (errorMessage!!.contains(getString(R.string.unable_to_resolve))) {
                             binding.viewError.tvError.text =
                                 "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
                         } else {

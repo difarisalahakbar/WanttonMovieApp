@@ -28,7 +28,7 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.MovieViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(list.get(position))
+        holder.bind(list[position])
     }
 
     override fun getItemCount(): Int = list.size

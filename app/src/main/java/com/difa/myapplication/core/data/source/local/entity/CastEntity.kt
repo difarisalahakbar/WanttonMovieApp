@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull
 @Entity(tableName = "table_cast")
 data class CastEntity (
      @PrimaryKey
-     @NotNull
      @ColumnInfo(name = "castId")
      var castId: String,
 

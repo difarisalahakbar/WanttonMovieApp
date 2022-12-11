@@ -41,7 +41,7 @@ class ShowAdapter(private val onClick: (ShowModel) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(list.get(position))
+        holder.bind(list[position])
     }
 
     override fun getItemCount(): Int = list.size
@@ -75,11 +75,11 @@ class ShowAdapter(private val onClick: (ShowModel) -> Unit) :
 
 
                 itemView.setOnClickListener {
-                    val category = list.get(0).category
+                    val category = list[0].category
 
                     when(item.id){
                         "view_all" ->{
-                            if (list.get(0).showType == MOVIE) {
+                            if (list[0].showType == MOVIE) {
                                 val intent = Intent(itemView.context, AllMoviesActivity::class.java)
                                 intent.putExtra(EXTRA_MOVIE, category)
                                 itemView.context.startActivity(intent)

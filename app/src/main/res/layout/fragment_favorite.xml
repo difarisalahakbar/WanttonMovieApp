@@ -2,7 +2,6 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nested_Scroll_Movie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -19,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:text="Favorite"
+            android:text="@string/favorite"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -36,16 +35,15 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_header"
-   />
+            app:layout_constraintTop_toBottomOf="@+id/tv_header" />
 
         <include
             android:id="@+id/view_empty"
             layout="@layout/view_empty"
             android:layout_width="match_parent"
-            android:layout_marginTop="51dp"
             android:layout_height="0dp"
-             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="51dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_header"
             tools:layout_editor_absoluteX="25dp" />
 

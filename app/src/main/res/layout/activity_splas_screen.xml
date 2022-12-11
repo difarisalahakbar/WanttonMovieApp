@@ -12,6 +12,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:src="@drawable/wantton"
+        android:contentDescription="@string/cd_splash"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

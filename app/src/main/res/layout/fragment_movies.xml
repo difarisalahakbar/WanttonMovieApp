@@ -14,7 +14,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
 
             <TextView
@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
-                android:text="Now Playing"
+                android:text="@string/now_playing"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
-                android:text="View All"
+                android:text="@string/view_all"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_now_playing"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Popular"
+                android:text="@string/popular"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
-                android:text="View All"
+                android:text="@string/view_all"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_popular"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Top Rated"
+                android:text="@string/top_rated"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
-                android:text="View All"
+                android:text="@string/view_all"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_top_rated"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +112,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_top_rated" />
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerNowPlaying"
+                android:id="@+id/shimmer_now_playing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
@@ -158,7 +158,7 @@
 
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerPopular"
+                android:id="@+id/shimmer_popular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
@@ -189,7 +189,7 @@
             </com.facebook.shimmer.ShimmerFrameLayout>
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerTopRated"
+                android:id="@+id/shimmer_top_rated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
@@ -220,7 +220,6 @@
             </com.facebook.shimmer.ShimmerFrameLayout>
 
             <include
-
                 android:id="@+id/view_error"
                 layout="@layout/view_error"
                 android:layout_width="match_parent"

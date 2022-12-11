@@ -9,8 +9,8 @@
     tools:context=".showall.AllMoviesActivity">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_Scroll_Movie"
         android:layout_width="match_parent"
+        android:id="@+id/nested_scroll_movie"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         android:layout_height="match_parent">
 
@@ -78,6 +78,7 @@
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/cd_back"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
             <TextView
                 android:id="@id/tv_title"
@@ -88,7 +89,7 @@
                 android:textSize="20sp"
                 android:layout_marginRight="24dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Movies" />
+                android:text="@string/movies" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

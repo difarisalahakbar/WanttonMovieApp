@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
+import com.difa.myapplication.R
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.ui.ShowAllAdapter
@@ -41,7 +42,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
 
         supportActionBar?.title = ""
 
-        binding.tvTitle.text = "Tv Series"
+        binding.tvTitle.text = getString(R.string.tv_series)
 
         binding.btnBack.setOnClickListener {
             finish()
@@ -71,7 +72,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
         with(binding){
             nestedScrollMovie.setOnScrollChangeListener(
                 NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
-                    val height = (v.getChildAt(0)?.measuredHeight ?: 0) - (v.measuredHeight ?: 0)
+                    val height = (v.getChildAt(0)?.measuredHeight ?: 0) - v.measuredHeight
                     if (scrollY == height) {
                         if (currentPage < maxPage) {
                             tvSeriesViewModel.setPage(++currentPage)
@@ -84,7 +85,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
 
         when(intent.getIntExtra(EXTRA_TV, 0)){
             POPULAR -> {
-                binding.tvNowPlaying.text = "Popular"
+                binding.tvNowPlaying.text = getString(R.string.popular)
                 tvSeriesViewModel.getAllTv(POPULAR, limit).observe(this) { tvList ->
                     when (tvList) {
                         is Resource.Loading -> {
@@ -95,7 +96,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
 
                             val data = tvList.data as ArrayList<ShowModel>
-                            if (!data.isNullOrEmpty()) {
+                            if (!data.isEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -109,7 +110,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
                 }
             }
             TOP_RATED -> {
-                binding.tvNowPlaying.text = "Top Rated"
+                binding.tvNowPlaying.text = getString(R.string.top_rated)
                 tvSeriesViewModel.getAllTv(TOP_RATED, limit).observe(this) { tvList ->
                     when (tvList) {
                         is Resource.Loading -> {
@@ -119,7 +120,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
                         is Resource.Success -> {
                             binding.progressBar.visibility = View.GONE
                             val data = tvList.data as ArrayList<ShowModel>
-                            if (!data.isNullOrEmpty()) {
+                            if (!data.isEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -133,7 +134,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
             }
             else ->{
                 tvSeriesViewModel.getAllTv(NOW_PLAYING, limit).observe(this) { tvList ->
-                    binding.tvNowPlaying.text = "On The Air"
+                    binding.tvNowPlaying.text = getString(R.string.on_the_air)
                     when (tvList) {
                         is Resource.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE

@@ -6,7 +6,7 @@ plugins {
     id 'kotlin-parcelize'
 }
 
-def API_KEY = '"YOUR_API_KEY"'
+def API_KEY = '"YOUR API KEY"'
 
 android {
     namespace 'com.difa.myapplication'

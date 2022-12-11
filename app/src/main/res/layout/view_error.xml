@@ -10,6 +10,7 @@
         android:layout_height="70dp"
         android:src="@drawable/error_illustration"
         android:layout_marginBottom="32dp"
+        android:contentDescription="@string/cd_error"
         app:layout_constraintBottom_toTopOf="@+id/tv_error_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -18,7 +19,7 @@
         android:id="@+id/tv_error_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Error Loading Content"
+        android:text="@string/error_loading_content"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -34,11 +35,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
-        android:text="Oops.. something went wrong!"
+        android:text="@string/oops_something_went_wrong"
         android:textAlignment="center"
         android:textSize="14sp"
         android:textColor="@color/white"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_error_title" />

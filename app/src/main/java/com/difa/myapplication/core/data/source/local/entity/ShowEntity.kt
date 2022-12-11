@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "table_show")
 data class ShowEntity(
-    @NotNull
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: String,

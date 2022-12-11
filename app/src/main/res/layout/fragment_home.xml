@@ -14,7 +14,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/white"
-        android:text="Discover"
+        android:text="@string/discover"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

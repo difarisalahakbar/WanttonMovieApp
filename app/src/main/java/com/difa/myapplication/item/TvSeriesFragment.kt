@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.difa.myapplication.R
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.ui.ShowAdapter
 import com.difa.myapplication.core.utils.*
@@ -34,7 +35,7 @@ class TvSeriesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
@@ -44,7 +45,7 @@ class TvSeriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvNowPlaying.text = "On The Air"
+        binding.tvNowPlaying.text = getString(R.string.on_the_air)
 
         setupRecyclerView()
         setupTvSeries()
