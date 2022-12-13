@@ -5,9 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class TvResponse(
 
     @field:SerializedName("results")
-    val results: List<TvItem>
+    val results: List<TvItem>,
 
-    )
+    @field:SerializedName("cast")
+    val cast: List<TvItem>
+
+)
 
 data class TvItem(
 

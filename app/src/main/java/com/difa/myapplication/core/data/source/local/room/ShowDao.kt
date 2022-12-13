@@ -1,11 +1,7 @@
 package com.difa.myapplication.core.data.source.local.room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
+import com.difa.myapplication.core.data.source.local.entity.CastEntity
 import com.difa.myapplication.core.data.source.local.entity.ShowEntity
 import com.difa.myapplication.core.utils.*
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +29,9 @@ interface ShowDao {
 
     @Update
     suspend fun updateShow(show: ShowEntity)
+
+    @Update
+    suspend fun updateCast(cast: CastEntity)
 
     @Query("DELETE FROM table_show WHERE showType = :showType and category = :category")
     suspend fun deleteAll(showType: Int, category: Int)

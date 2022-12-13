@@ -16,5 +16,13 @@ data class CastModel(
 
     var profilePath: String? = "",
 
+    var knownAs: String,
+
+    var biography: String?,
+
+    var birthDay: String?,
+
+    var deathDay: String?
+
 
 ) : Parcelable

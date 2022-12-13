@@ -13,6 +13,9 @@ interface CastDao {
     @Query("SELECT * FROM table_cast WHERE id = :showId")
     fun getCastShowById(showId: String): Flow<List<CastEntity>>
 
+    @Query("SELECT * FROM table_cast WHERE castId = :castId")
+    fun getDetailCastById(castId: String): Flow<CastEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAllCastShow(casts: List<CastEntity>)
 }

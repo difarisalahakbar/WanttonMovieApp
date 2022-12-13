@@ -218,4 +218,45 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
         }.flowOn(Dispatchers.IO)
     }
 
+    fun getDetailCast(castId: String): Flow<ApiResponse<CastItem>> {
+        return flow {
+            try {
+                val response = apiService.getDetailCast(castId)
+                emit(ApiResponse.Success(response))
+            } catch (e: Exception) {
+                emit(ApiResponse.Error(e.message.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getFilmography(castId: String): Flow<ApiResponse<List<MovieItem>>> {
+        return flow {
+            try{
+                val response = apiService.getFilmography(castId).cast
+                if(response.isNotEmpty()){
+                    emit(ApiResponse.Success(response))
+                }else{
+                    emit(ApiResponse.Empty)
+                }
+            }catch (e: Exception){
+                emit(ApiResponse.Error(e.message.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getTvography(castId: String): Flow<ApiResponse<List<TvItem>>> {
+        return flow {
+            try{
+                val response = apiService.getTvography(castId).cast
+                if(response.isNotEmpty()){
+                    emit(ApiResponse.Success(response))
+                }else{
+                    emit(ApiResponse.Empty)
+                }
+            }catch (e: Exception){
+                emit(ApiResponse.Error(e.message.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
 }

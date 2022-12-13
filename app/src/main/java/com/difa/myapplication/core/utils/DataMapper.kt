@@ -19,7 +19,7 @@ object DataMapper {
                 title = it.title,
                 overview = it.overview,
                 posterPath = it.posterPath ?: "",
-                releaseDate = it.releaseDate ,
+                releaseDate = it.releaseDate,
                 voteAverage = it.voteAverage.toString(),
                 //additional data
                 showType = MOVIE,
@@ -44,7 +44,7 @@ object DataMapper {
                 title = it.title,
                 overview = it.overview,
                 posterPath = it.posterPath ?: "",
-                releaseDate = it.releaseDate ,
+                releaseDate = it.releaseDate,
                 voteAverage = it.voteAverage.toString().substring(0, 3),
                 //additional data
                 showType = MOVIE,
@@ -69,10 +69,10 @@ object DataMapper {
                 title = it.title,
                 overview = it.overview,
                 posterPath = it.posterPath ?: "",
-                releaseDate = it.releaseDate ,
+                releaseDate = it.releaseDate,
                 voteAverage = it.voteAverage.toString().substring(0, 3),
                 //additional data
-                showType = MOVIE,
+                showType = TV_SERIES,
                 category = (0..2).random(),
                 isFavorite = false,
                 //update data
@@ -193,7 +193,7 @@ object DataMapper {
             title = input.title,
             overview = input.overview,
             posterPath = input.posterPath ?: "",
-            releaseDate = input.releaseDate ?:"-",
+            releaseDate = input.releaseDate ?: "-",
             voteAverage = input.voteAverage.toString().substring(0, 3),
             category = category,
             showType = TV_SERIES,
@@ -235,6 +235,10 @@ object DataMapper {
                 name = it.name,
                 character = it.character,
                 profilePath = it.profilePath,
+                knownAs = it.knownAs,
+                biography = it.biography ?: "",
+                birthDay = it.birthDay ?: "",
+                deathDay = it.deathDay ?: ""
             )
         }
 
@@ -246,12 +250,41 @@ object DataMapper {
                 id = it.id,
                 castId = it.castId,
                 name = it.name,
-                character = it.character,
-                profilePath = it.profilePath
+                character = it.character ?: "",
+                profilePath = it.profilePath,
+                knownAs = it.knownAs,
+                biography = it.biography ?: "",
+                birthDay = it.birthDay ?: "",
+                deathDay = it.deathDay ?: ""
             )
         }
 
+    fun mapDetailCastEntitiesToDomain(it: CastEntity): CastModel =
+        CastModel(
+            id = it.id,
+            castId = it.castId,
+            name = it.name,
+            character = it.character ?: "",
+            profilePath = it.profilePath,
+            knownAs = it.knownAs,
+            biography = it.biography ?: "",
+            birthDay = it.birthDay ?: "",
+            deathDay = it.deathDay ?: ""
+        )
 
+    fun mapDetailCastResponseToEntities(it: CastItem, showId: String, character: String): CastEntity {
+        return CastEntity(
+                id = showId,
+                castId = it.castId,
+                name = it.name,
+                character = character,
+                profilePath = it.profilePath,
+                knownAs = it.knownAs,
+                biography = it.biography ?: "",
+                birthDay = it.birthDay ?: "",
+                deathDay = it.deathDay ?: ""
+            )
+    }
     fun mapDomainToEntity(input: ShowModel) = ShowEntity(
         id = input.id,
         title = input.title,
@@ -262,7 +295,7 @@ object DataMapper {
         category = input.category,
         showType = input.showType,
         isFavorite = input.isFavorite,
-        backdropPath =  input.backdropPath,
+        backdropPath = input.backdropPath,
         genres1 = input.genres1,
         genres2 = input.genres2,
         genres3 = input.genres3,

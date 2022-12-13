@@ -25,6 +25,10 @@ interface ShowUseCase {
 
     fun getAllSimilarShow(id: String, showType: Int): Flow<Resource<List<ShowModel>>>
 
+    fun getDetailCastById(castId: String, showId: String, character: String): Flow<Resource<CastModel>>
+
+    fun getCastMovieOrTv(castId: String, showType: Int): Flow<Resource<List<ShowModel>>>
+
     suspend fun setFavorite(showModel: ShowModel, state: Boolean)
 
 }

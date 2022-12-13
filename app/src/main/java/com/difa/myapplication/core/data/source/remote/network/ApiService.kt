@@ -92,4 +92,21 @@ interface ApiService {
         @Query("api_key") api: String? = BuildConfig.API_KEY
     ): TvResponse
 
+    @GET("person/{person_id}")
+    suspend fun getDetailCast(
+        @Path("person_id") castId: String,
+        @Query("api_key") api: String? = BuildConfig.API_KEY
+    ): CastItem
+
+    @GET("person/{person_id}/movie_credits")
+    suspend fun getFilmography(
+        @Path("person_id") castId: String,
+        @Query("api_key") api: String? = BuildConfig.API_KEY
+    ): MovieResponse
+
+    @GET("person/{person_id}/tv_credits")
+    suspend fun getTvography(
+        @Path("person_id") castId: String,
+        @Query("api_key") api: String? = BuildConfig.API_KEY
+    ): TvResponse
 }

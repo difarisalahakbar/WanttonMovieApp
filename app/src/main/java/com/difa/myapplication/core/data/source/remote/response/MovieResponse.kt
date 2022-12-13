@@ -7,6 +7,8 @@ data class MovieResponse(
 	@field:SerializedName("results")
 	val results: List<MovieItem>,
 
+	@field:SerializedName("cast")
+	val cast: List<MovieItem>
 )
 
 data class MovieItem(

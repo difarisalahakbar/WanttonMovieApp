@@ -96,7 +96,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
 
                             val data = tvList.data as ArrayList<ShowModel>
-                            if (!data.isEmpty()) {
+                            if (data.isNotEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -120,7 +120,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
                         is Resource.Success -> {
                             binding.progressBar.visibility = View.GONE
                             val data = tvList.data as ArrayList<ShowModel>
-                            if (!data.isEmpty()) {
+                            if (data.isNotEmpty()) {
                                 adapter.setList(data)
                             }
                         }

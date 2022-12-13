@@ -3,8 +3,6 @@ package com.difa.myapplication.core.data.source.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.difa.myapplication.core.data.source.remote.response.GenresItem
-import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "table_show")
 data class ShowEntity(

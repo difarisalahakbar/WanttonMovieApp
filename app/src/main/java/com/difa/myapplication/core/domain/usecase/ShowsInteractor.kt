@@ -43,6 +43,14 @@ class ShowsInteractor @Inject constructor(private val showRepository: IShowRepos
         return showRepository.getAllSimilarShow(id, showType)
     }
 
+    override fun getDetailCastById(castId: String, showId: String, character: String): Flow<Resource<CastModel>> {
+        return showRepository.getDetailCastById(castId, showId, character)
+    }
+
+    override fun getCastMovieOrTv(castId: String, showType: Int): Flow<Resource<List<ShowModel>>> {
+        return showRepository.getCastMovieOrTv(castId, showType)
+    }
+
     override suspend fun setFavorite(showModel: ShowModel, state: Boolean) {
         return showRepository.setFavorite(showModel, state)
     }

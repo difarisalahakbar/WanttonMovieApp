@@ -4,7 +4,6 @@ import com.difa.myapplication.core.domain.usecase.ShowUseCase
 import com.difa.myapplication.core.domain.usecase.ShowsInteractor
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton

@@ -18,9 +18,22 @@ data class CastItem(
     val name: String,
 
     @field:SerializedName("character")
-    val character: String,
+    val character: String?,
 
     @field:SerializedName("profile_path")
-    val profilePath: String?
+    val profilePath: String?,
 
+    @field:SerializedName("known_for_department")
+    val knownAs: String,
+
+    //update Data
+
+    @field:SerializedName("biography")
+    val biography: String?,
+
+    @field:SerializedName("birthday")
+    val birthDay: String?,
+
+    @field:SerializedName("deathday")
+    val deathDay: String?
     )

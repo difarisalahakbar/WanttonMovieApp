@@ -27,4 +27,8 @@ class DetailViewModel @Inject constructor(private val showUseCase: ShowUseCase):
     }
 
     fun getAllSimilarShow(id: String, showType: Int) = showUseCase.getAllSimilarShow(id, showType).asLiveData()
+
+    fun getCastMovieOrTv(castId: String, showType: Int) = showUseCase.getCastMovieOrTv(castId, showType).asLiveData()
+
+    fun getDetailCast(castId: String, showId: String, character: String) = showUseCase.getDetailCastById(castId, showId, character).asLiveData()
 }

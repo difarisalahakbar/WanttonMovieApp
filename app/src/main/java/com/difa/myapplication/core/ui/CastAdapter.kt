@@ -9,7 +9,7 @@ import com.difa.myapplication.core.domain.model.CastModel
 import com.difa.myapplication.core.utils.URL_IMAGE
 import com.difa.myapplication.databinding.ItemListCastBinding
 
-class CastAdapter : RecyclerView.Adapter<CastAdapter.MovieViewHolder>() {
+class CastAdapter(private val onClick: (CastModel) -> Unit) : RecyclerView.Adapter<CastAdapter.MovieViewHolder>() {
 
     private val list = ArrayList<CastModel>()
 
@@ -43,6 +43,10 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.MovieViewHolder>() {
                 }
                 tvName.text = item.name
                 tvCharacter.text = item.character
+
+                itemView.setOnClickListener {
+                    onClick.invoke(item)
+                }
             }
         }
      }

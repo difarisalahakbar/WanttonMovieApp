@@ -108,7 +108,11 @@ class ShowRepository @Inject constructor(
         return object : NetworkBoundResource<ShowModel, TvItem>() {
             public override fun loadFromDB(): Flow<ShowModel> {
                 return localDataSource.getShowById(tvId).map {
-                    DataMapper.mapDetailEntitiesToDomain(it)
+                    if (it != null) {
+                        DataMapper.mapDetailEntitiesToDomain(it)
+                    } else {
+                        DataMapper.mapDetailEntitiesToDomain(DataMapper.dummyDataEntity())
+                    }
                 }
             }
 
@@ -122,6 +126,7 @@ class ShowRepository @Inject constructor(
 
             override suspend fun saveCallResult(data: TvItem) {
                 val tv = DataMapper.mapTvDetailResponseToEntities(data, category)
+                localDataSource.insertAllShow(listOf(tv))
                 localDataSource.updateShow(tv)
             }
         }.asFlow()
@@ -236,6 +241,64 @@ class ShowRepository @Inject constructor(
 
             override fun createCallSecond(): Flow<ApiResponse<List<TvItem>>> {
                 return remoteDataSource.getAllSimilarTv(id)
+
+            }
+
+            override fun mappingCallResultSecond(data: List<TvItem>): Flow<List<ShowModel>> {
+                return flow {
+                    emit(
+                        DataMapper.mapTvResponseToDomain(data)
+                    )
+                }
+            }
+
+            override fun emptyResult(): Flow<List<ShowModel>> {
+                return flow { emit(emptyList()) }
+            }
+
+
+        }.asFlow()
+    }
+
+    override fun getDetailCastById(castId: String, showId: String, character: String): Flow<Resource<CastModel>>{
+        return object: NetworkBoundResource<CastModel, CastItem>(){
+            override fun loadFromDB(): Flow<CastModel> {
+                return localDataSource.getDetailCastById(castId).map {
+                    DataMapper.mapDetailCastEntitiesToDomain(it)
+                }
+            }
+
+            override fun shouldFetch(data: CastModel?): Boolean {
+                return true
+            }
+
+            override suspend fun createCall(): Flow<ApiResponse<CastItem>> {
+                return remoteDataSource.getDetailCast(castId)
+            }
+
+            override suspend fun saveCallResult(data: CastItem) {
+                val dataEntity = DataMapper.mapDetailCastResponseToEntities(data, showId, character)
+                localDataSource.updateCast(dataEntity)
+            }
+
+        }.asFlow()
+    }
+    override fun getCastMovieOrTv(castId: String, showType: Int): Flow<Resource<List<ShowModel>>> {
+        return object : RemoteResource<List<ShowModel>, List<MovieItem>, List<TvItem>>(showType) {
+            override fun createCall(): Flow<ApiResponse<List<MovieItem>>> {
+                return remoteDataSource.getFilmography(castId)
+            }
+
+            override fun mappingCallResult(data: List<MovieItem>): Flow<List<ShowModel>> {
+                return flow {
+                    emit(
+                        DataMapper.mapMovieResponseToDomain(data)
+                    )
+                }
+            }
+
+            override fun createCallSecond(): Flow<ApiResponse<List<TvItem>>> {
+                return remoteDataSource.getTvography(castId)
 
             }
 

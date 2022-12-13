@@ -19,6 +19,8 @@ class LocalDataSource @Inject constructor(
 
     fun getShowById(showId: String): Flow<ShowEntity?> = showDao.getShowById(showId)
 
+    fun getDetailCastById(castId: String): Flow<CastEntity> = castDao.getDetailCastById(castId)
+
     fun getCastShowById(showId: String) : Flow<List<CastEntity>> = castDao.getCastShowById(showId)
 
     fun getAllFavorites(): Flow<List<ShowEntity>> = showDao.getAllFavorite()
@@ -26,6 +28,8 @@ class LocalDataSource @Inject constructor(
     fun getMovieSearch(keyword: String): Flow<List<ShowEntity>> = showDao.getMovieSearch(keyword)
 
     suspend fun updateShow(showEntity: ShowEntity) = showDao.updateShow(showEntity)
+
+    suspend fun updateCast(castEntity: CastEntity)= showDao.updateCast(castEntity)
 
     suspend fun insertAllShow(shows: List<ShowEntity>) = showDao.insertAllShow(shows)
 

@@ -96,7 +96,7 @@ class AllMoviesActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
 
                             val data = movieList.data as ArrayList<ShowModel>
-                            if (!data.isEmpty()) {
+                            if (data.isNotEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -119,7 +119,7 @@ class AllMoviesActivity : AppCompatActivity() {
                         is Resource.Success -> {
                             binding.progressBar.visibility = View.GONE
                             val data = movieList.data as ArrayList<ShowModel>
-                            if (!data.isEmpty()) {
+                            if (data.isNotEmpty()) {
                                 adapter.setList(data)
                             }
                         }
@@ -142,7 +142,7 @@ class AllMoviesActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
 
                             val data = movieList.data as ArrayList<ShowModel>
-                            if (!data.isEmpty()) {
+                            if (data.isNotEmpty()) {
                                 adapter.setList(data)
                             }
                         }

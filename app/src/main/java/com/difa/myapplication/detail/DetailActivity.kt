@@ -86,7 +86,7 @@ class DetailActivity : AppCompatActivity() {
                     similarAdapter.setList(showModel.data, false)
                 }
                 is Resource.Error -> {
-
+                    Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -102,9 +102,10 @@ class DetailActivity : AppCompatActivity() {
                             if (showModel != null) {
                                 when (showModel) {
                                     is Resource.Loading -> {
-
+                                        viewLoading.root.visibility = View.VISIBLE
                                     }
                                     is Resource.Success -> {
+                                        viewLoading.root.visibility = View.GONE
                                         currentShowModel = showModel.data!!
                                         setFavorite(currentShowModel)
 
@@ -128,6 +129,7 @@ class DetailActivity : AppCompatActivity() {
                                         tvDuration.text = "N/A"
                                     }
                                     is Resource.Error -> {
+                                        viewLoading.root.visibility = View.GONE
                                         Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
                                     }
                                 }
@@ -165,9 +167,10 @@ class DetailActivity : AppCompatActivity() {
                             if (showModel != null) {
                                 when (showModel) {
                                     is Resource.Loading -> {
-
+                                        viewLoading.root.visibility = View.VISIBLE
                                     }
                                     is Resource.Success -> {
+                                        viewLoading.root.visibility = View.GONE
                                         currentShowModel = showModel.data!!
                                         setFavorite(currentShowModel)
 
@@ -197,6 +200,7 @@ class DetailActivity : AppCompatActivity() {
                                         tvDuration.text = duration
                                     }
                                     is Resource.Error -> {
+                                        viewLoading.root.visibility = View.GONE
                                         Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
                                     }
                                 }
@@ -238,7 +242,11 @@ class DetailActivity : AppCompatActivity() {
             rvSimilar.layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
         }
 
-        adapter = CastAdapter()
+        adapter = CastAdapter{
+            val intent = Intent(this@DetailActivity, DetailCastActivity::class.java)
+            intent.putExtra(EXTRA_DETAIL_CAST, it)
+            startActivity(intent)
+        }
 
         with(binding) {
             rvCast.adapter = adapter
