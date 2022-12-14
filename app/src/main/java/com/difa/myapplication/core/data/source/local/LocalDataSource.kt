@@ -31,6 +31,8 @@ class LocalDataSource @Inject constructor(
 
     suspend fun updateCast(castEntity: CastEntity)= showDao.updateCast(castEntity)
 
+    suspend fun updateListCast(casts: List<CastEntity>)= showDao.updateListCast(casts)
+
     suspend fun insertAllShow(shows: List<ShowEntity>) = showDao.insertAllShow(shows)
 
     suspend fun insertAllCastShow(casts: List<CastEntity>) = castDao.insertAllCastShow(casts)

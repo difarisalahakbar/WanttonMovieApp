@@ -33,6 +33,9 @@ interface ShowDao {
     @Update
     suspend fun updateCast(cast: CastEntity)
 
+    @Update
+    suspend fun updateListCast(cast: List<CastEntity>)
+
     @Query("DELETE FROM table_show WHERE showType = :showType and category = :category")
     suspend fun deleteAll(showType: Int, category: Int)
 }

@@ -151,6 +151,7 @@ class ShowRepository @Inject constructor(
             override suspend fun saveCallResult(data: List<CastItem>) {
                 val casts = DataMapper.mapCastResponseToEntities(data, showId)
                 localDataSource.insertAllCastShow(casts)
+                localDataSource.updateListCast(casts)
             }
 
         }.asFlow()

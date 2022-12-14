@@ -103,9 +103,11 @@ class DetailActivity : AppCompatActivity() {
                                 when (showModel) {
                                     is Resource.Loading -> {
                                         viewLoading.root.visibility = View.VISIBLE
+                                        cardMovie.visibility = View.GONE
                                     }
                                     is Resource.Success -> {
                                         viewLoading.root.visibility = View.GONE
+                                        cardMovie.visibility = View.VISIBLE
                                         currentShowModel = showModel.data!!
                                         setFavorite(currentShowModel)
 
@@ -113,7 +115,9 @@ class DetailActivity : AppCompatActivity() {
                                             .load(URL_IMAGE_ORIGINAL + showModel.data.backdropPath)
                                             .into(imgTimeline)
 
-                                        tvGenre1.text = showModel.data.genres1
+                                        if (showModel.data.genres1 != null) {
+                                            tvGenre1.text = showModel.data.genres1
+                                         }
 
                                         if (showModel.data.genres2 != null) {
                                             dot6.visibility = View.VISIBLE
@@ -129,6 +133,7 @@ class DetailActivity : AppCompatActivity() {
                                         tvDuration.text = "N/A"
                                     }
                                     is Resource.Error -> {
+                                        cardMovie.visibility = View.VISIBLE
                                         viewLoading.root.visibility = View.GONE
                                         Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
                                     }
@@ -168,9 +173,11 @@ class DetailActivity : AppCompatActivity() {
                                 when (showModel) {
                                     is Resource.Loading -> {
                                         viewLoading.root.visibility = View.VISIBLE
+                                        cardMovie.visibility = View.GONE
                                     }
                                     is Resource.Success -> {
                                         viewLoading.root.visibility = View.GONE
+                                        cardMovie.visibility = View.VISIBLE
                                         currentShowModel = showModel.data!!
                                         setFavorite(currentShowModel)
 
@@ -178,7 +185,9 @@ class DetailActivity : AppCompatActivity() {
                                             .load(URL_IMAGE_ORIGINAL + showModel.data.backdropPath)
                                             .into(imgTimeline)
 
-                                        tvGenre1.text = showModel.data.genres1
+                                        if (showModel.data.genres1 != null) {
+                                            tvGenre1.text = showModel.data.genres1
+                                        }
 
                                         if (showModel.data.genres2 != null) {
                                             dot6.visibility = View.VISIBLE
@@ -192,15 +201,18 @@ class DetailActivity : AppCompatActivity() {
                                             tvGenre3.text = showModel.data.genres3
                                         }
                                         val runtime = showModel.data.runtime
-                                        val duration = if (runtime?.div(60)!! > 0) {
+                                        val duration = if (runtime?.div(60)!! > 0 && runtime.mod(60) > 0) {
                                             "${runtime.div(60)}h ${runtime.mod(60)}m"
-                                        } else {
+                                        } else if(runtime.div(60) == 0) {
                                             "${runtime.mod(60)}m"
+                                        } else{
+                                            "${runtime.div(60)}h"
                                         }
                                         tvDuration.text = duration
                                     }
                                     is Resource.Error -> {
                                         viewLoading.root.visibility = View.GONE
+                                        cardMovie.visibility = View.VISIBLE
                                         Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
                                     }
                                 }

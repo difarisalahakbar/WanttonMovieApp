@@ -16,7 +16,6 @@
             android:layout_height="match_parent">
 
 
-
             <ImageView
                 android:id="@+id/img_timeline"
                 android:layout_width="match_parent"
@@ -33,11 +32,11 @@
                 android:layout_width="140dp"
                 android:layout_height="200dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="180dp"
+                android:layout_marginTop="150dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 app:cardCornerRadius="8dp"
-                app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_goneMarginLeft="8dp">
 
@@ -137,20 +136,27 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="11dp"
                 android:layout_marginRight="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/card_movie"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintStart_toStartOf="@+id/tv_overview"
+                app:layout_constraintTop_toBottomOf="@+id/tv_overview">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Genres : " />
 
                 <TextView
                     android:id="@+id/tv_genre1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="Crime"
+                    android:layout_marginLeft="8dp"
+                    android:text="-"
                     android:textColor="@color/soft_grey" />
 
                 <ImageView
@@ -214,7 +220,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
-                android:lineHeight="24sp"
+                android:lineSpacingExtra="7.5sp"
                 android:text="A mentally troubled stand-up comedian embarks on a downward spiral that leads to the creation of an iconic villain."
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -235,7 +241,7 @@
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
             <TextView
                 android:id="@+id/actor"

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.difa.myapplication.core.data.Resource
@@ -30,6 +31,7 @@ class DetailCastActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailCastBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         setSupportActionBar(binding.toolbar)
 
