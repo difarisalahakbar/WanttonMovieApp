@@ -203,10 +203,12 @@ class DetailActivity : AppCompatActivity() {
                                         val runtime = showModel.data.runtime
                                         val duration = if (runtime?.div(60)!! > 0 && runtime.mod(60) > 0) {
                                             "${runtime.div(60)}h ${runtime.mod(60)}m"
-                                        } else if(runtime.div(60) == 0) {
+                                        } else if(runtime.div(60) == 0 && runtime.mod(60) > 0) {
                                             "${runtime.mod(60)}m"
-                                        } else{
+                                        } else if((runtime.div(60) > 0 && runtime.mod(60) == 0)){
                                             "${runtime.div(60)}h"
+                                        }else{
+                                            ""
                                         }
                                         tvDuration.text = duration
                                     }

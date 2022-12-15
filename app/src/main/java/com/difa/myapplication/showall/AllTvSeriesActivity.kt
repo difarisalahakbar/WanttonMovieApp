@@ -86,7 +86,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
         when(intent.getIntExtra(EXTRA_TV, 0)){
             POPULAR -> {
                 binding.tvNowPlaying.text = getString(R.string.popular)
-                tvSeriesViewModel.getAllTv(POPULAR, limit).observe(this) { tvList ->
+                tvSeriesViewModel.getAllTv(POPULAR, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
                     when (tvList) {
                         is Resource.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
@@ -111,7 +111,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
             }
             TOP_RATED -> {
                 binding.tvNowPlaying.text = getString(R.string.top_rated)
-                tvSeriesViewModel.getAllTv(TOP_RATED, limit).observe(this) { tvList ->
+                tvSeriesViewModel.getAllTv(TOP_RATED, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
                     when (tvList) {
                         is Resource.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
@@ -133,7 +133,7 @@ class AllTvSeriesActivity : AppCompatActivity() {
                 }
             }
             else ->{
-                tvSeriesViewModel.getAllTv(NOW_PLAYING, limit).observe(this) { tvList ->
+                tvSeriesViewModel.getAllTv(NOW_PLAYING, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
                     binding.tvNowPlaying.text = getString(R.string.on_the_air)
                     when (tvList) {
                         is Resource.Loading -> {

@@ -1,5 +1,10 @@
 package com.difa.myapplication.core.utils
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.difa.myapplication.core.data.source.local.entity.CastEntity
 import com.difa.myapplication.core.data.source.local.entity.ShowEntity
 import com.difa.myapplication.core.data.source.remote.response.CastItem
@@ -272,19 +277,24 @@ object DataMapper {
             deathDay = it.deathDay ?: ""
         )
 
-    fun mapDetailCastResponseToEntities(it: CastItem, showId: String, character: String): CastEntity {
+    fun mapDetailCastResponseToEntities(
+        it: CastItem,
+        showId: String,
+        character: String
+    ): CastEntity {
         return CastEntity(
-                id = showId,
-                castId = it.castId,
-                name = it.name,
-                character = character,
-                profilePath = it.profilePath,
-                knownAs = it.knownAs,
-                biography = it.biography ?: "",
-                birthDay = it.birthDay ?: "",
-                deathDay = it.deathDay ?: ""
-            )
+            id = showId,
+            castId = it.castId,
+            name = it.name,
+            character = character,
+            profilePath = it.profilePath,
+            knownAs = it.knownAs,
+            biography = it.biography ?: "",
+            birthDay = it.birthDay ?: "",
+            deathDay = it.deathDay ?: ""
+        )
     }
+
     fun mapDomainToEntity(input: ShowModel) = ShowEntity(
         id = input.id,
         title = input.title,
@@ -309,4 +319,19 @@ object DataMapper {
     fun dummyDataEntity(): ShowEntity =
         ShowEntity("view_all", "", "", "", "", "", 5, 5, false, "", "", "", "", 0, false)
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isNetworkConnected(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

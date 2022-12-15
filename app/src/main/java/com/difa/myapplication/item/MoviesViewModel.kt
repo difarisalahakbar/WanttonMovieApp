@@ -1,5 +1,6 @@
 package com.difa.myapplication.item
 
+import android.content.Context
 import androidx.lifecycle.*
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.domain.model.ShowModel
@@ -16,8 +17,8 @@ class MoviesViewModel @Inject constructor(private val showUseCase: ShowUseCase):
         this.page.postValue(page)
     }
 
-    fun getAllMovie(category: Int, limit: Int): LiveData<Resource<List<ShowModel>>> = page.switchMap {
-        showUseCase.getAllMovie(category, it, it * limit).asLiveData()
+    fun getAllMovie(category: Int, limit: Int, context: Context): LiveData<Resource<List<ShowModel>>> = page.switchMap {
+        showUseCase.getAllMovie(category, it, it * limit, context).asLiveData()
     }
 
 }

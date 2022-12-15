@@ -1,5 +1,6 @@
 package com.difa.myapplication.core.domain.usecase
 
+ import android.content.Context
  import com.difa.myapplication.core.data.Resource
  import com.difa.myapplication.core.domain.model.CastModel
  import com.difa.myapplication.core.domain.model.ShowModel
@@ -8,11 +9,11 @@ package com.difa.myapplication.core.domain.usecase
  import javax.inject.Inject
 
 class ShowsInteractor @Inject constructor(private val showRepository: IShowRepository): ShowUseCase {
-    override fun getAllMovie(category: Int, page: Int, limit: Int): Flow<Resource<List<ShowModel>>> {
-        return showRepository.getAllMovie(category, page, limit)
+    override fun getAllMovie(category: Int, page: Int, limit: Int, context: Context): Flow<Resource<List<ShowModel>>> {
+        return showRepository.getAllMovie(category, page, limit, context)
     }
-    override fun getAllTv(category: Int, page: Int, limit: Int): Flow<Resource<List<ShowModel>>> {
-        return showRepository.getAllTv(category, page, limit)
+    override fun getAllTv(category: Int, page: Int, limit: Int, context: Context): Flow<Resource<List<ShowModel>>> {
+        return showRepository.getAllTv(category, page, limit, context)
     }
 
     override fun getMovieDetail(movieId: String, category: Int): Flow<Resource<ShowModel>> {

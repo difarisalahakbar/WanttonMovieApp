@@ -105,7 +105,7 @@ class MoviesFragment : Fragment() {
     private fun setupMovies() {
         moviesViewModel.setPage(currentPage)
 
-        moviesViewModel.getAllMovie(NOW_PLAYING, limit).observe(viewLifecycleOwner) { showModel ->
+        moviesViewModel.getAllMovie(NOW_PLAYING, limit, requireContext()).observe(viewLifecycleOwner) { showModel ->
             if (showModel != null) {
                 when (showModel) {
                     is Resource.Loading -> {
@@ -132,7 +132,7 @@ class MoviesFragment : Fragment() {
 
 
 
-        moviesViewModel.getAllMovie(POPULAR, limit).observe(viewLifecycleOwner) { showModel ->
+        moviesViewModel.getAllMovie(POPULAR, limit, requireContext()).observe(viewLifecycleOwner) { showModel ->
             if (showModel != null) {
                 when (showModel) {
                     is Resource.Loading -> {
@@ -149,7 +149,7 @@ class MoviesFragment : Fragment() {
                 }
             }
         }
-        moviesViewModel.getAllMovie(TOP_RATED, limit).observe(viewLifecycleOwner) { showModel ->
+        moviesViewModel.getAllMovie(TOP_RATED, limit, requireContext()).observe(viewLifecycleOwner) { showModel ->
             if (showModel != null) {
                 when (showModel) {
                     is Resource.Loading -> {

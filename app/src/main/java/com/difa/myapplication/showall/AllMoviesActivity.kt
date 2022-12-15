@@ -86,7 +86,7 @@ class AllMoviesActivity : AppCompatActivity() {
         when (intent.getIntExtra(EXTRA_MOVIE, 0)) {
             POPULAR -> {
                 binding.tvNowPlaying.text = getString(R.string.popular)
-                moviesViewModel.getAllMovie(POPULAR, limit).observe(this) { movieList ->
+                moviesViewModel.getAllMovie(POPULAR, limit, this@AllMoviesActivity).observe(this) { movieList ->
                     when (movieList) {
                         is Resource.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
@@ -110,7 +110,7 @@ class AllMoviesActivity : AppCompatActivity() {
             }
             TOP_RATED -> {
                 binding.tvNowPlaying.text = getString(R.string.top_rated)
-                moviesViewModel.getAllMovie(TOP_RATED, limit).observe(this) { movieList ->
+                moviesViewModel.getAllMovie(TOP_RATED, limit, this@AllMoviesActivity).observe(this) { movieList ->
                     when (movieList) {
                         is Resource.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
@@ -132,7 +132,7 @@ class AllMoviesActivity : AppCompatActivity() {
                 }
             }
             else -> {
-                moviesViewModel.getAllMovie(NOW_PLAYING, limit).observe(this) { movieList ->
+                moviesViewModel.getAllMovie(NOW_PLAYING, limit, this@AllMoviesActivity).observe(this) { movieList ->
                     when (movieList) {
                         is Resource.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE

@@ -1,5 +1,8 @@
 package com.difa.myapplication.core.data
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.difa.myapplication.core.data.source.local.LocalDataSource
 import com.difa.myapplication.core.data.source.remote.RemoteDataSource
 import com.difa.myapplication.core.data.source.remote.network.ApiResponse
@@ -10,6 +13,7 @@ import com.difa.myapplication.core.domain.model.CastModel
 import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.domain.repository.IShowRepository
 import com.difa.myapplication.core.utils.*
+import com.difa.myapplication.core.utils.DataMapper.isNetworkConnected
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -25,7 +29,8 @@ class ShowRepository @Inject constructor(
     override fun getAllMovie(
         category: Int,
         page: Int,
-        limit: Int
+        limit: Int,
+        context: Context
     ): Flow<Resource<List<ShowModel>>> =
         object : NetworkBoundResource<List<ShowModel>, List<MovieItem>>() {
             override fun loadFromDB(): Flow<List<ShowModel>> {
@@ -34,7 +39,15 @@ class ShowRepository @Inject constructor(
             }
 
             override fun shouldFetch(data: List<ShowModel>?): Boolean {
-                return data == null || data.isEmpty() || data.size != page * limit
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (isNetworkConnected(context)) {
+                        true
+                    } else {
+                        data == null || data.isEmpty() || data.size != page * limit
+                    }
+                } else {
+                    data == null || data.isEmpty() || data.size != page * limit
+                }
             }
 
             override suspend fun createCall(): Flow<ApiResponse<List<MovieItem>>> {
@@ -51,7 +64,7 @@ class ShowRepository @Inject constructor(
             }
         }.asFlow()
 
-    override fun getAllTv(category: Int, page: Int, limit: Int): Flow<Resource<List<ShowModel>>> =
+    override fun getAllTv(category: Int, page: Int, limit: Int, context: Context): Flow<Resource<List<ShowModel>>> =
         object : NetworkBoundResource<List<ShowModel>, List<TvItem>>() {
             override fun loadFromDB(): Flow<List<ShowModel>> {
                 return localDataSource.getAllTv(category, limit)
@@ -59,7 +72,15 @@ class ShowRepository @Inject constructor(
             }
 
             override fun shouldFetch(data: List<ShowModel>?): Boolean {
-                return data == null || data.isEmpty() || data.size != page * limit
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (isNetworkConnected(context)) {
+                        true
+                    } else {
+                        data == null || data.isEmpty() || data.size != page * limit
+                    }
+                } else {
+                    data == null || data.isEmpty() || data.size != page * limit
+                }
             }
 
             override suspend fun createCall(): Flow<ApiResponse<List<TvItem>>> {
@@ -261,8 +282,12 @@ class ShowRepository @Inject constructor(
         }.asFlow()
     }
 
-    override fun getDetailCastById(castId: String, showId: String, character: String): Flow<Resource<CastModel>>{
-        return object: NetworkBoundResource<CastModel, CastItem>(){
+    override fun getDetailCastById(
+        castId: String,
+        showId: String,
+        character: String
+    ): Flow<Resource<CastModel>> {
+        return object : NetworkBoundResource<CastModel, CastItem>() {
             override fun loadFromDB(): Flow<CastModel> {
                 return localDataSource.getDetailCastById(castId).map {
                     DataMapper.mapDetailCastEntitiesToDomain(it)
@@ -284,6 +309,7 @@ class ShowRepository @Inject constructor(
 
         }.asFlow()
     }
+
     override fun getCastMovieOrTv(castId: String, showType: Int): Flow<Resource<List<ShowModel>>> {
         return object : RemoteResource<List<ShowModel>, List<MovieItem>, List<TvItem>>(showType) {
             override fun createCall(): Flow<ApiResponse<List<MovieItem>>> {

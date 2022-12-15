@@ -74,7 +74,7 @@ class TvSeriesFragment : Fragment() {
     private fun setupTvSeries() {
         tvSeriesViewModel.setPage(currentPage)
 
-        tvSeriesViewModel.getAllTv(NOW_PLAYING, limit)
+        tvSeriesViewModel.getAllTv(NOW_PLAYING, limit, requireContext())
             .observe(viewLifecycleOwner) { showModel ->
                 if (showModel != null) {
                     when (showModel) {
@@ -102,7 +102,7 @@ class TvSeriesFragment : Fragment() {
                 }
             }
 
-        tvSeriesViewModel.getAllTv(POPULAR, limit)
+        tvSeriesViewModel.getAllTv(POPULAR, limit, requireContext())
             .observe(viewLifecycleOwner) { showModel ->
                 if (showModel != null) {
                     when (showModel) {
@@ -121,7 +121,7 @@ class TvSeriesFragment : Fragment() {
                 }
             }
 
-        tvSeriesViewModel.getAllTv(TOP_RATED, limit)
+        tvSeriesViewModel.getAllTv(TOP_RATED, limit, requireContext())
             .observe(viewLifecycleOwner) { showModel ->
                 if (showModel != null) {
                     when (showModel) {

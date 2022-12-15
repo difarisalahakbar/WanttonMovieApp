@@ -1,5 +1,6 @@
 package com.difa.myapplication.core.domain.usecase
 
+import android.content.Context
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.domain.model.CastModel
 import com.difa.myapplication.core.domain.model.ShowModel
@@ -7,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShowUseCase {
 
-    fun getAllMovie(category: Int, page: Int, limit: Int): Flow<Resource<List<ShowModel>>>
+    fun getAllMovie(category: Int, page: Int, limit: Int, context: Context): Flow<Resource<List<ShowModel>>>
 
-    fun getAllTv(category: Int, page: Int, limit: Int): Flow<Resource<List<ShowModel>>>
+    fun getAllTv(category: Int, page: Int, limit: Int, context: Context): Flow<Resource<List<ShowModel>>>
 
     fun getMovieDetail(movieId: String, category: Int): Flow<Resource<ShowModel>>
 
