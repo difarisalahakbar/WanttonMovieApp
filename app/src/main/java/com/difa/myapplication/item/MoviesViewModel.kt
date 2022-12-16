@@ -13,6 +13,8 @@ class MoviesViewModel @Inject constructor(private val showUseCase: ShowUseCase):
 
     private val page = MutableLiveData<Int>()
 
+
+
     fun setPage(page: Int){
         this.page.postValue(page)
     }

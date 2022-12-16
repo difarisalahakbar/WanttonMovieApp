@@ -44,4 +44,14 @@
     <string name="joker">Joker</string>
     <string name="movies">Movies</string>
     <string name="biography">Biography</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
+    <string name="overview">Overview</string>
+    <string name="cast">Cast</string>
+    <string name="similar_movie_or_tv_series">Similar Movie or Tv Series</string>
+    <string name="born">Born:</string>
+    <string name="dead">Dead:</string>
+    <string name="known_as">Known as:</string>
+    <string name="list_movie">List Movie</string>
+    <string name="list_tv_series">List Tv Series</string>
 </resources>

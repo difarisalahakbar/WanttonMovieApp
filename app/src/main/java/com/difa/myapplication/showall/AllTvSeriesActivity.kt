@@ -82,76 +82,85 @@ class AllTvSeriesActivity : AppCompatActivity() {
                     }
                 })
         }
+        val isShowCastAdapter = intent.getBooleanExtra(EXTRA_CAST_MOVIE, false)
+        val showModelFromCast = intent.getParcelableArrayListExtra<ShowModel>(EXTRA_MOVIE)
 
-        when(intent.getIntExtra(EXTRA_TV, 0)){
-            POPULAR -> {
-                binding.tvNowPlaying.text = getString(R.string.popular)
-                tvSeriesViewModel.getAllTv(POPULAR, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
-                    when (tvList) {
-                        is Resource.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                        }
-
-                        is Resource.Success -> {
-                            binding.progressBar.visibility = View.GONE
-
-                            val data = tvList.data as ArrayList<ShowModel>
-                            if (data.isNotEmpty()) {
-                                adapter.setList(data)
+        if(isShowCastAdapter){
+            binding.progressBar.visibility = View.GONE
+            binding.tvNowPlaying.text = ""
+            adapter.setList(showModelFromCast)
+        }else{
+            when(intent.getIntExtra(EXTRA_TV, 0)){
+                POPULAR -> {
+                    binding.tvNowPlaying.text = getString(R.string.popular)
+                    tvSeriesViewModel.getAllTv(POPULAR, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
+                        when (tvList) {
+                            is Resource.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
                             }
-                        }
 
-                        is Resource.Error -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(this@AllTvSeriesActivity, "${tvList.message}", Toast.LENGTH_LONG).show()
+                            is Resource.Success -> {
+                                binding.progressBar.visibility = View.GONE
 
+                                val data = tvList.data as ArrayList<ShowModel>
+                                if (data.isNotEmpty()) {
+                                    adapter.setList(data)
+                                }
+                            }
+
+                            is Resource.Error -> {
+                                binding.progressBar.visibility = View.GONE
+                                Toast.makeText(this@AllTvSeriesActivity, "${tvList.message}", Toast.LENGTH_LONG).show()
+
+                            }
                         }
                     }
                 }
-            }
-            TOP_RATED -> {
-                binding.tvNowPlaying.text = getString(R.string.top_rated)
-                tvSeriesViewModel.getAllTv(TOP_RATED, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
-                    when (tvList) {
-                        is Resource.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                        }
-
-                        is Resource.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            val data = tvList.data as ArrayList<ShowModel>
-                            if (data.isNotEmpty()) {
-                                adapter.setList(data)
+                TOP_RATED -> {
+                    binding.tvNowPlaying.text = getString(R.string.top_rated)
+                    tvSeriesViewModel.getAllTv(TOP_RATED, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
+                        when (tvList) {
+                            is Resource.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
                             }
-                        }
 
-                        is Resource.Error -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(this@AllTvSeriesActivity, "${tvList.message}", Toast.LENGTH_LONG).show()
+                            is Resource.Success -> {
+                                binding.progressBar.visibility = View.GONE
+                                val data = tvList.data as ArrayList<ShowModel>
+                                if (data.isNotEmpty()) {
+                                    adapter.setList(data)
+                                }
+                            }
+
+                            is Resource.Error -> {
+                                binding.progressBar.visibility = View.GONE
+                                Toast.makeText(this@AllTvSeriesActivity, "${tvList.message}", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }
-            }
-            else ->{
-                tvSeriesViewModel.getAllTv(NOW_PLAYING, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
-                    binding.tvNowPlaying.text = getString(R.string.on_the_air)
-                    when (tvList) {
-                        is Resource.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                        }
+                else ->{
+                    tvSeriesViewModel.getAllTv(NOW_PLAYING, limit, this@AllTvSeriesActivity).observe(this) { tvList ->
+                        binding.tvNowPlaying.text = getString(R.string.on_the_air)
+                        when (tvList) {
+                            is Resource.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
+                            }
 
-                        is Resource.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            adapter.setList(tvList.data)
-                        }
+                            is Resource.Success -> {
+                                binding.progressBar.visibility = View.GONE
+                                adapter.setList(tvList.data)
+                            }
 
-                        is Resource.Error -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(this@AllTvSeriesActivity, "${tvList.message}", Toast.LENGTH_LONG).show()
+                            is Resource.Error -> {
+                                binding.progressBar.visibility = View.GONE
+                                Toast.makeText(this@AllTvSeriesActivity, "${tvList.message}", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 }

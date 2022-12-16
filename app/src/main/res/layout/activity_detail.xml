@@ -36,7 +36,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 app:cardCornerRadius="8dp"
-                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_goneMarginLeft="8dp">
 
@@ -58,8 +58,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:maxLines="2"
                 android:ellipsize="end"
+                android:maxLines="2"
                 android:text="@string/joker"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -144,14 +144,14 @@
                 android:layout_marginTop="11dp"
                 android:layout_marginRight="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tv_overview"
-                app:layout_constraintTop_toBottomOf="@+id/tv_overview">
+                app:layout_constraintStart_toStartOf="@+id/btn_expand_shrink"
+                app:layout_constraintTop_toBottomOf="@+id/btn_expand_shrink">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="Genres : " />
+                    android:text="Genres : "
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_genre1"
@@ -176,7 +176,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:text="Drama"
                     android:textColor="@color/soft_grey"
                     android:visibility="gone" />
 
@@ -197,7 +196,6 @@
                     android:layout_marginLeft="8dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Thriller"
                     android:textColor="@color/soft_grey"
                     android:visibility="gone" />
             </LinearLayout>
@@ -208,12 +206,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Overview"
+                android:text="@string/overview"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_movie" />
+
 
             <TextView
                 android:id="@+id/tv_overview"
@@ -222,12 +221,23 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
+                android:ellipsize="end"
                 android:lineSpacingExtra="7.5sp"
-                android:text="A mentally troubled stand-up comedian embarks on a downward spiral that leads to the creation of an iconic villain."
-                android:textColor="@color/white"
+                android:maxLines="4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+            <TextView
+                android:id="@+id/btn_expand_shrink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/show_more"
+                android:textColor="@color/yellow"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/tv_overview"
+                app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
 
             <Button
                 android:id="@+id/btn_favorite"
@@ -251,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Cast"
+                android:text="@string/cast"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -275,7 +285,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Similar Movie or Tv Series"
+                android:text="@string/similar_movie_or_tv_series"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"

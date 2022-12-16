@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.domain.model.CastModel
 import com.difa.myapplication.core.ui.ShowAdapter
+import com.difa.myapplication.core.ui.ShowCastAdapter
 import com.difa.myapplication.core.utils.*
 import com.difa.myapplication.databinding.ActivityDetailCastBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,9 +24,9 @@ class DetailCastActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailCastBinding
 
-    private lateinit var movieAdapter: ShowAdapter
+    private lateinit var movieAdapter: ShowCastAdapter
 
-    private lateinit var tvAdapter: ShowAdapter
+    private lateinit var tvAdapter: ShowCastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +99,12 @@ class DetailCastActivity : AppCompatActivity() {
 
                             }
                             is Resource.Success -> {
-                                movieAdapter.setList(showModel.data, false)
+                                if(showModel.data!!.size > 7){
+                                    movieAdapter.setList(showModel.data.take(7), true)
+                                }else{
+                                    movieAdapter.setList(showModel.data, true)
+                                }
+                                movieAdapter.setFullList(showModel.data)
                             }
                             is Resource.Error -> {
                               Toast.makeText(this@DetailCastActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
@@ -112,7 +118,12 @@ class DetailCastActivity : AppCompatActivity() {
 
                             }
                             is Resource.Success -> {
-                                tvAdapter.setList(showModel.data, false)
+                                if(showModel.data!!.size > 7){
+                                    tvAdapter.setList(showModel.data.take(7), true)
+                                }else{
+                                    tvAdapter.setList(showModel.data, true)
+                                }
+                                tvAdapter.setFullList(showModel.data)
                             }
                             is Resource.Error -> {
                                 Toast.makeText(this@DetailCastActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
@@ -125,13 +136,13 @@ class DetailCastActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        movieAdapter = ShowAdapter {
+        movieAdapter = ShowCastAdapter {
             val intent = Intent(this@DetailCastActivity, DetailActivity::class.java)
             intent.putExtra(EXTRA_DETAIL, it)
             startActivity(intent)
         }
 
-        tvAdapter = ShowAdapter {
+        tvAdapter = ShowCastAdapter {
             val intent = Intent(this@DetailCastActivity, DetailActivity::class.java)
             intent.putExtra(EXTRA_DETAIL, it)
             startActivity(intent)

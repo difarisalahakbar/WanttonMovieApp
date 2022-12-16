@@ -1,11 +1,12 @@
 package com.difa.myapplication.detail
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,30 +56,59 @@ class DetailActivity : AppCompatActivity() {
                     tvTitle.text = title
                     tvRate.text = voteAverage
                     tvOverview.text = overview
-                    if(releaseDate != null && releaseDate != "" && releaseDate != "-"){
+
+                    tvOverview.post {
+                        val l = tvOverview.layout
+                        if (l != null) {
+                            val lines = l.lineCount
+                            if (lines > 0)
+                                if (l.getEllipsisCount(lines - 1) > 0) {
+                                    btnExpandShrink.visibility = View.VISIBLE
+
+                                }
+                        }
+                    }
+
+                    btnExpandShrink.setOnClickListener {
+                        if (btnExpandShrink.text == getString(R.string.show_more)) {
+                            btnExpandShrink.text = getString(R.string.show_less)
+                            tvOverview.ellipsize = null
+                            tvOverview.maxLines = Integer.MAX_VALUE
+                        } else {
+                            btnExpandShrink.text = getString(R.string.show_more)
+                            tvOverview.ellipsize = TextUtils.TruncateAt.END
+                            tvOverview.maxLines = 4
+                        }
+                    }
+                    if (releaseDate != null && releaseDate != "" && releaseDate != "-") {
                         tvYear.text = releaseDate?.substring(0, 4)
                     }
-                    if (data.posterPath != "" && data.posterPath != null){
+                    if (data.posterPath != "" && data.posterPath != null) {
                         Glide.with(this@DetailActivity)
                             .load(URL_IMAGE + posterPath)
                             .into(imgMovie)
-                    }else{
-                        imgMovie.setImageDrawable(ContextCompat.getDrawable(this@DetailActivity, R.drawable.empty))
+                    } else {
+                        imgMovie.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                this@DetailActivity,
+                                R.drawable.empty
+                            )
+                        )
                     }
                 }
                 setupSimilarShow(id, showType)
             }
         }
 
-        when (data?.showType){
+        when (data?.showType) {
             MOVIE -> setupDetailMovie(data)
             TV_SERIES -> setupDetailTv(data)
         }
     }
 
     private fun setupSimilarShow(id: String, showType: Int) {
-        detailViewModel.getAllSimilarShow(id, showType).observe(this){ showModel ->
-            when(showModel){
+        detailViewModel.getAllSimilarShow(id, showType).observe(this) { showModel ->
+            when (showModel) {
                 is Resource.Loading -> {
 
                 }
@@ -86,7 +116,8 @@ class DetailActivity : AppCompatActivity() {
                     similarAdapter.setList(showModel.data, false)
                 }
                 is Resource.Error -> {
-                    Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
@@ -98,7 +129,8 @@ class DetailActivity : AppCompatActivity() {
             with(data) {
                 with(binding) {
                     //setDetail from new api response
-                    detailViewModel.getTvDetail(id, category).observe(this@DetailActivity) { showModel ->
+                    detailViewModel.getTvDetail(id, category)
+                        .observe(this@DetailActivity) { showModel ->
                             if (showModel != null) {
                                 when (showModel) {
                                     is Resource.Loading -> {
@@ -117,7 +149,7 @@ class DetailActivity : AppCompatActivity() {
 
                                         if (showModel.data.genres1 != null) {
                                             tvGenre1.text = showModel.data.genres1
-                                         }
+                                        }
 
                                         if (showModel.data.genres2 != null) {
                                             dot6.visibility = View.VISIBLE
@@ -135,7 +167,11 @@ class DetailActivity : AppCompatActivity() {
                                     is Resource.Error -> {
                                         cardMovie.visibility = View.VISIBLE
                                         viewLoading.root.visibility = View.GONE
-                                        Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(
+                                            this@DetailActivity,
+                                            "${showModel.message}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                     }
                                 }
                             }
@@ -152,7 +188,11 @@ class DetailActivity : AppCompatActivity() {
                                     adapter.setList(castModel.data)
                                 }
                                 is Resource.Error -> {
-                                    Toast.makeText(this@DetailActivity, "${castModel.message}", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@DetailActivity,
+                                        "${castModel.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             }
                         }
@@ -201,21 +241,26 @@ class DetailActivity : AppCompatActivity() {
                                             tvGenre3.text = showModel.data.genres3
                                         }
                                         val runtime = showModel.data.runtime
-                                        val duration = if (runtime?.div(60)!! > 0 && runtime.mod(60) > 0) {
-                                            "${runtime.div(60)}h ${runtime.mod(60)}m"
-                                        } else if(runtime.div(60) == 0 && runtime.mod(60) > 0) {
-                                            "${runtime.mod(60)}m"
-                                        } else if((runtime.div(60) > 0 && runtime.mod(60) == 0)){
-                                            "${runtime.div(60)}h"
-                                        }else{
-                                            ""
-                                        }
+                                        val duration =
+                                            if (runtime?.div(60)!! > 0 && runtime.mod(60) > 0) {
+                                                "${runtime.div(60)}h ${runtime.mod(60)}m"
+                                            } else if (runtime.div(60) == 0 && runtime.mod(60) > 0) {
+                                                "${runtime.mod(60)}m"
+                                            } else if ((runtime.div(60) > 0 && runtime.mod(60) == 0)) {
+                                                "${runtime.div(60)}h"
+                                            } else {
+                                                ""
+                                            }
                                         tvDuration.text = duration
                                     }
                                     is Resource.Error -> {
                                         viewLoading.root.visibility = View.GONE
                                         cardMovie.visibility = View.VISIBLE
-                                        Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(
+                                            this@DetailActivity,
+                                            "${showModel.message}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                     }
                                 }
                             }
@@ -232,7 +277,11 @@ class DetailActivity : AppCompatActivity() {
                                     adapter.setList(castModel.data)
                                 }
                                 is Resource.Error -> {
-                                    Toast.makeText(this@DetailActivity, "${castModel.message}", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@DetailActivity,
+                                        "${castModel.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
 
                                 }
                             }
@@ -251,12 +300,13 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        with(binding){
+        with(binding) {
             rvSimilar.adapter = similarAdapter
-            rvSimilar.layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            rvSimilar.layoutManager =
+                LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
         }
 
-        adapter = CastAdapter{
+        adapter = CastAdapter {
             val intent = Intent(this@DetailActivity, DetailCastActivity::class.java)
             intent.putExtra(EXTRA_DETAIL_CAST, it)
             startActivity(intent)
@@ -269,7 +319,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFavorite(showModel: ShowModel){
+    private fun setFavorite(showModel: ShowModel) {
         var state = showModel.isFavorite
         setDesign(state)
         binding.btnFavorite.setOnClickListener {
@@ -279,15 +329,25 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setDesign(state: Boolean){
-        if(state){
+    private fun setDesign(state: Boolean) {
+        if (state) {
             binding.btnFavorite.text = getString(R.string.remove_favorite)
             binding.btnFavorite.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_grey))
-            binding.btnFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_remove_24, 0, 0, 0)
-        }else{
-            binding.btnFavorite.text =getString(R.string.add_favorite)
+            binding.btnFavorite.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_baseline_remove_24,
+                0,
+                0,
+                0
+            )
+        } else {
+            binding.btnFavorite.text = getString(R.string.add_favorite)
             binding.btnFavorite.setBackgroundColor(ContextCompat.getColor(this, R.color.yellow))
-            binding.btnFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_add_24, 0, 0, 0)
+            binding.btnFavorite.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_baseline_add_24,
+                0,
+                0,
+                0
+            )
         }
     }
 }
