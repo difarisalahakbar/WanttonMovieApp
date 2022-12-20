@@ -1,9 +1,11 @@
 package com.difa.myapplication.core.ui
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -27,17 +29,20 @@ class ShowCastAdapter(private val onClick: (ShowModel) -> Unit ) :
         }
         fullList.clear()
         fullList.addAll(arrayList)
+
+        if(fullList.size > 7){
+            list.add(DataMapper.dummyData())
+        }
+
     }
 
-    fun setList(arrayList: List<ShowModel>?, addDummy: Boolean) {
+    fun setList(arrayList: List<ShowModel>?) {
         if (arrayList == null) {
             return
         }
         list.clear()
         list.addAll(arrayList)
-        if(addDummy){
-            list.add(DataMapper.dummyData())
-        }
+
         notifyDataSetChanged()
     }
 
@@ -71,6 +76,8 @@ class ShowCastAdapter(private val onClick: (ShowModel) -> Unit ) :
                     imgMovie.setImageDrawable(itemView.context.getDrawable(R.drawable.view_all))
                     dot.visibility = View.GONE
                     star.visibility = View.GONE
+                    tvYear.visibility = View.GONE
+
                 }
 
                 if (item.posterPath != "" && item.posterPath != null) {

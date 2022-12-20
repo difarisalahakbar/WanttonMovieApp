@@ -25,7 +25,7 @@ class ShowAdapter(private val onClick: (ShowModel) -> Unit) :
         }
         list.clear()
         list.addAll(arrayList)
-        if(addDummy){
+        if(addDummy && list.size == 7){
             list.add(DataMapper.dummyData())
         }
         notifyDataSetChanged()
@@ -61,6 +61,7 @@ class ShowAdapter(private val onClick: (ShowModel) -> Unit) :
                     imgMovie.setImageDrawable(itemView.context.getDrawable(R.drawable.view_all))
                     dot.visibility = View.GONE
                     star.visibility = View.GONE
+                    tvYear.visibility = View.GONE
                 }
 
                 if (item.posterPath != "" && item.posterPath != null) {

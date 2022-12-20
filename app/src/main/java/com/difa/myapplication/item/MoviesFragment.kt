@@ -1,15 +1,13 @@
 package com.difa.myapplication.item
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.difa.myapplication.R
-import com.difa.myapplication.core.data.Resource
+import com.difa.myapplication.core.base.BaseFragment
+import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.ui.ShowAdapter
 import com.difa.myapplication.core.utils.*
 import com.difa.myapplication.databinding.FragmentMoviesBinding
@@ -18,10 +16,7 @@ import com.difa.myapplication.showall.AllMoviesActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MoviesFragment : Fragment() {
-
-    private var _binding: FragmentMoviesBinding? = null
-    private val binding get() = _binding!!
+class MoviesFragment : BaseFragment<FragmentMoviesBinding>() {
 
     private val moviesViewModel: MoviesViewModel by viewModels()
 
@@ -32,59 +27,115 @@ class MoviesFragment : Fragment() {
     private val currentPage = 1
     private val limit = 7
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentMoviesBinding.inflate(inflater, container, false)
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMoviesBinding =
+        FragmentMoviesBinding.inflate(inflater, container, false)
 
-        return binding.root
+
+    override fun setupIntent() {
+
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setupUI() {
         setupRecyclerView()
-        setupMovies()
+    }
 
+    override fun setupAction() {
         binding.viewAllPopular.setOnClickListener {
-            val intent = Intent(requireActivity(), AllMoviesActivity::class.java)
-            intent.putExtra(EXTRA_MOVIE, POPULAR)
-            startActivity(intent)
+            intentToAllMoviesActivity(POPULAR)
         }
-        binding.viewAllNowPlaying.setOnClickListener {
-            val intent = Intent(requireActivity(), AllMoviesActivity::class.java)
-            intent.putExtra(EXTRA_MOVIE, NOW_PLAYING)
-            startActivity(intent)
+        binding.viewAllNowPlayings.setOnClickListener {
+            intentToAllMoviesActivity(NOW_PLAYING)
         }
         binding.viewAllTopRated.setOnClickListener {
-            val intent = Intent(requireActivity(), AllMoviesActivity::class.java)
-            intent.putExtra(EXTRA_MOVIE, TOP_RATED)
-            startActivity(intent)
+            intentToAllMoviesActivity(TOP_RATED)
         }
         binding.swipeRefresh.setOnRefreshListener {
-            setupMovies()
+            setupObserver()
             binding.swipeRefresh.isRefreshing = false
         }
+    }
 
+    override fun setupProcess() {
+        moviesViewModel.setPage(currentPage)
+    }
+
+    override fun setupObserver() {
+        moviesViewModel.getAllMovie(NOW_PLAYING, limit, requireContext()).observes(viewLifecycleOwner,
+                onLoading = {
+                    binding.shimmerNowPlaying.visible()
+                },
+                onSuccess = {
+                    binding.shimmerNowPlaying.gone()
+                    adapterNowPlaying.setList(it, true)
+                },
+                onError = {
+                    binding.shimmerNowPlaying.gone()
+                    binding.viewError.root.visible()
+                    val errorMessage = it
+                    if (errorMessage.contains(getString(R.string.unable_to_resolve))) {
+                        binding.viewError.tvError.text =
+                            "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
+                    } else {
+                        binding.viewError.tvError.text = "$errorMessage"
+                    }
+                }
+            )
+
+        moviesViewModel.getAllMovie(POPULAR, limit, requireContext()).observes(viewLifecycleOwner,
+            onLoading = {
+                binding.shimmerPopular.visible()
+            },
+            onSuccess = {
+                binding.shimmerPopular.gone()
+                adapterPopular.setList(it, true)
+            },
+            onError = {
+                binding.shimmerPopular.gone()
+                binding.viewError.root.visible()
+                val errorMessage = it
+                if (errorMessage.contains(getString(R.string.unable_to_resolve))) {
+                    binding.viewError.tvError.text =
+                        "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
+                } else {
+                    binding.viewError.tvError.text = "$errorMessage"
+                }
+            }
+        )
+
+        moviesViewModel.getAllMovie(TOP_RATED, limit, requireContext()).observes(viewLifecycleOwner,
+            onLoading = {
+                binding.shimmerTopRated.visible()
+            },
+            onSuccess = {
+                binding.shimmerTopRated.gone()
+                adapterTopRated.setList(it, true)
+            },
+            onError = {
+                binding.shimmerTopRated.gone()
+                binding.viewError.root.visible()
+                val errorMessage = it
+                if (errorMessage.contains(getString(R.string.unable_to_resolve))) {
+                    binding.viewError.tvError.text =
+                        "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
+                } else {
+                    binding.viewError.tvError.text = "$errorMessage"
+                }
+            }
+        )
     }
 
     private fun setupRecyclerView() {
         adapterNowPlaying = ShowAdapter {
-            val intent = Intent(requireActivity(), DetailActivity::class.java)
-            intent.putExtra(EXTRA_DETAIL, it)
-            startActivity(intent)
+            intentToDetailActivity(it)
         }
         adapterPopular = ShowAdapter {
-            val intent = Intent(requireActivity(), DetailActivity::class.java)
-            intent.putExtra(EXTRA_DETAIL, it)
-            startActivity(intent)
+            intentToDetailActivity(it)
         }
         adapterTopRated = ShowAdapter {
-            val intent = Intent(requireActivity(), DetailActivity::class.java)
-            intent.putExtra(EXTRA_DETAIL, it)
-            startActivity(intent)
+            intentToDetailActivity(it)
         }
 
         with(binding) {
@@ -102,77 +153,16 @@ class MoviesFragment : Fragment() {
         }
     }
 
-    private fun setupMovies() {
-        moviesViewModel.setPage(currentPage)
-
-        moviesViewModel.getAllMovie(NOW_PLAYING, limit, requireContext()).observe(viewLifecycleOwner) { showModel ->
-            if (showModel != null) {
-                when (showModel) {
-                    is Resource.Loading -> {
-                        binding.shimmerNowPlaying.visibility = View.VISIBLE
-                    }
-                    is Resource.Success -> {
-                        binding.shimmerNowPlaying.visibility = View.GONE
-                        adapterNowPlaying.setList(showModel.data, true)
-                    }
-                    is Resource.Error -> {
-                        binding.shimmerNowPlaying.visibility = View.GONE
-                        binding.viewError.root.visibility = View.VISIBLE
-                        val errorMessage = showModel.message
-                        if (errorMessage!!.contains(getString(R.string.unable_to_resolve))){
-                            binding.viewError.tvError.text = "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
-                        }else{
-                            binding.viewError.tvError.text = "$errorMessage"
-                        }
-                    }
-
-                }
-            }
-        }
-
-
-
-        moviesViewModel.getAllMovie(POPULAR, limit, requireContext()).observe(viewLifecycleOwner) { showModel ->
-            if (showModel != null) {
-                when (showModel) {
-                    is Resource.Loading -> {
-                        binding.shimmerPopular.visibility = View.VISIBLE
-                    }
-                    is Resource.Success -> {
-                        binding.shimmerPopular.visibility = View.GONE
-                        adapterPopular.setList(showModel.data, true)
-                    }
-                    is Resource.Error -> {
-                        binding.shimmerPopular.visibility = View.GONE
-                    }
-
-                }
-            }
-        }
-        moviesViewModel.getAllMovie(TOP_RATED, limit, requireContext()).observe(viewLifecycleOwner) { showModel ->
-            if (showModel != null) {
-                when (showModel) {
-                    is Resource.Loading -> {
-                        binding.shimmerTopRated.visibility = View.VISIBLE
-                     }
-                    is Resource.Success -> {
-                        binding.shimmerTopRated.visibility = View.GONE
-
-                        adapterTopRated.setList(showModel.data,true)
-                    }
-                    is Resource.Error -> {
-                        binding.shimmerTopRated.visibility = View.GONE
-
-                    }
-
-                }
-            }
-        }
+    private fun intentToAllMoviesActivity(category: Int) {
+        val intent = Intent(requireActivity(), AllMoviesActivity::class.java)
+        intent.putExtra(EXTRA_MOVIE, category)
+        startActivity(intent)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun intentToDetailActivity(showModel: ShowModel) {
+        val intent = Intent(requireActivity(), DetailActivity::class.java)
+        intent.putExtra(EXTRA_DETAIL, showModel)
+        startActivity(intent)
     }
 
 }

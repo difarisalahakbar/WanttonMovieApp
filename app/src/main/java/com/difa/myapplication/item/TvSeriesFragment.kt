@@ -9,18 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.difa.myapplication.R
+import com.difa.myapplication.core.base.BaseFragment
 import com.difa.myapplication.core.data.Resource
+import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.ui.ShowAdapter
 import com.difa.myapplication.core.utils.*
 import com.difa.myapplication.databinding.FragmentMoviesBinding
 import com.difa.myapplication.detail.DetailActivity
+import com.difa.myapplication.showall.AllMoviesActivity
 import com.difa.myapplication.showall.AllTvSeriesActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TvSeriesFragment : Fragment() {
-    private var _binding: FragmentMoviesBinding? = null
-    private val binding get() = _binding!!
+class TvSeriesFragment : BaseFragment<FragmentMoviesBinding>() {
 
     private val tvSeriesViewModel: TvSeriesViewModel by viewModels()
 
@@ -31,130 +32,15 @@ class TvSeriesFragment : Fragment() {
     private val currentPage = 1
     private val limit = 7
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentMoviesBinding.inflate(inflater, container, false)
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.tvNowPlaying.text = getString(R.string.on_the_air)
-
-        setupRecyclerView()
-        setupTvSeries()
-
-        binding.viewAllPopular.setOnClickListener {
-            val intent = Intent(requireActivity(), AllTvSeriesActivity::class.java)
-            intent.putExtra(EXTRA_TV, POPULAR)
-            startActivity(intent)
-        }
-        binding.viewAllNowPlaying.setOnClickListener {
-            val intent = Intent(requireActivity(), AllTvSeriesActivity::class.java)
-            intent.putExtra(EXTRA_TV, NOW_PLAYING)
-            startActivity(intent)
-        }
-        binding.viewAllTopRated.setOnClickListener {
-            val intent = Intent(requireActivity(), AllTvSeriesActivity::class.java)
-            intent.putExtra(EXTRA_TV, TOP_RATED)
-            startActivity(intent)
-        }
-        binding.swipeRefresh.setOnRefreshListener {
-            setupTvSeries()
-            binding.swipeRefresh.isRefreshing = false
-        }
-
-    }
-
-    private fun setupTvSeries() {
-        tvSeriesViewModel.setPage(currentPage)
-
-        tvSeriesViewModel.getAllTv(NOW_PLAYING, limit, requireContext())
-            .observe(viewLifecycleOwner) { showModel ->
-                if (showModel != null) {
-                    when (showModel) {
-                        is Resource.Loading -> {
-                            binding.shimmerNowPlaying.visibility = View.VISIBLE
-                            binding.viewError.root.visibility = View.GONE
-                        }
-                        is Resource.Success -> {
-                            binding.shimmerNowPlaying.visibility = View.GONE
-                            binding.viewError.root.visibility = View.GONE
-                            adapterNowPlaying.setList(showModel.data, true)
-                        }
-                        is Resource.Error -> {
-                            binding.shimmerNowPlaying.visibility = View.GONE
-                            binding.viewError.root.visibility = View.VISIBLE
-                            val errorMessage = showModel.message
-                            if (errorMessage!!.contains("Unable to resolve host")){
-                                binding.viewError.tvError.text = "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
-                            }else{
-                                binding.viewError.tvError.text = "$errorMessage"
-                            }
-                        }
-
-                    }
-                }
-            }
-
-        tvSeriesViewModel.getAllTv(POPULAR, limit, requireContext())
-            .observe(viewLifecycleOwner) { showModel ->
-                if (showModel != null) {
-                    when (showModel) {
-                        is Resource.Loading -> {
-                            binding.shimmerPopular.visibility = View.VISIBLE
-                        }
-                        is Resource.Success -> {
-                            binding.shimmerPopular.visibility = View.GONE
-                            adapterPopular.setList(showModel.data, true)
-                        }
-                        is Resource.Error -> {
-                            binding.shimmerPopular.visibility = View.GONE
-                        }
-
-                    }
-                }
-            }
-
-        tvSeriesViewModel.getAllTv(TOP_RATED, limit, requireContext())
-            .observe(viewLifecycleOwner) { showModel ->
-                if (showModel != null) {
-                    when (showModel) {
-                        is Resource.Loading -> {
-                            binding.shimmerTopRated.visibility = View.VISIBLE
-                        }
-                        is Resource.Success -> {
-                            binding.shimmerTopRated.visibility = View.GONE
-                            adapterTopRated.setList(showModel.data, true)
-                        }
-                        is Resource.Error -> {
-                            binding.shimmerTopRated.visibility = View.GONE
-                        }
-                    }
-                }
-            }
-    }
-
     private fun setupRecyclerView() {
-        adapterNowPlaying = ShowAdapter{
-            val intent = Intent(requireActivity(), DetailActivity::class.java)
-            intent.putExtra(EXTRA_DETAIL, it)
-            startActivity(intent)
+        adapterNowPlaying = ShowAdapter {
+            intentToDetailActivity(it)
         }
-        adapterPopular = ShowAdapter{
-            val intent = Intent(requireActivity(), DetailActivity::class.java)
-            intent.putExtra(EXTRA_DETAIL, it)
-            startActivity(intent)
+        adapterPopular = ShowAdapter {
+            intentToDetailActivity(it)
         }
-        adapterTopRated = ShowAdapter{
-            val intent = Intent(requireActivity(), DetailActivity::class.java)
-            intent.putExtra(EXTRA_DETAIL, it)
-            startActivity(intent)
+        adapterTopRated = ShowAdapter {
+            intentToDetailActivity(it)
         }
 
         with(binding) {
@@ -172,8 +58,115 @@ class TvSeriesFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMoviesBinding =
+        FragmentMoviesBinding.inflate(inflater, container, false)
+
+    override fun setupIntent() {
+    }
+
+    override fun setupUI() {
+        binding.tvNowPlaying.text = getString(R.string.on_the_air)
+
+        setupRecyclerView()
+    }
+
+    override fun setupAction() {
+        binding.viewAllPopular.setOnClickListener {
+            intentToAllMoviesActivity(POPULAR)
+        }
+        binding.viewAllNowPlayings.setOnClickListener {
+            intentToAllMoviesActivity(NOW_PLAYING)
+        }
+        binding.viewAllTopRated.setOnClickListener {
+            intentToAllMoviesActivity(TOP_RATED)
+        }
+        binding.swipeRefresh.setOnRefreshListener {
+            setupObserver()
+            binding.swipeRefresh.isRefreshing = false
+        }
+    }
+
+    override fun setupProcess() {
+        tvSeriesViewModel.setPage(currentPage)
+    }
+
+    override fun setupObserver() {
+        tvSeriesViewModel.getAllTv(NOW_PLAYING, limit, requireContext()).observes(viewLifecycleOwner,
+                onLoading = {
+                    binding.shimmerNowPlaying.visible()
+                },
+                onSuccess = {
+                    binding.shimmerNowPlaying.gone()
+                    adapterNowPlaying.setList(it, true)
+                },
+                onError = {
+                    binding.shimmerNowPlaying.gone()
+                    binding.viewError.root.visible()
+                    val errorMessage = it
+                    if (errorMessage.contains("Unable to resolve host")) {
+                        binding.viewError.tvError.text =
+                            "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
+                    } else {
+                        binding.viewError.tvError.text = "$errorMessage"
+                    }
+                }
+            )
+
+        tvSeriesViewModel.getAllTv(POPULAR, limit, requireContext()).observes(viewLifecycleOwner,
+            onLoading = {
+                binding.shimmerPopular.visible()
+            },
+            onSuccess = {
+                binding.shimmerPopular.gone()
+                adapterPopular.setList(it, true)
+            },
+            onError = {
+                binding.shimmerPopular.gone()
+                binding.viewError.root.visible()
+                val errorMessage = it
+                if (errorMessage.contains("Unable to resolve host")) {
+                    binding.viewError.tvError.text =
+                        "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
+                } else {
+                    binding.viewError.tvError.text = "$errorMessage"
+                }
+            }
+        )
+
+        tvSeriesViewModel.getAllTv(TOP_RATED, limit, requireContext()).observes(viewLifecycleOwner,
+            onLoading = {
+                binding.shimmerTopRated.visible()
+            },
+            onSuccess = {
+                binding.shimmerTopRated.gone()
+                adapterTopRated.setList(it, true)
+            },
+            onError = {
+                binding.shimmerTopRated.gone()
+                binding.viewError.root.visible()
+                val errorMessage = it
+                if (errorMessage.contains("Unable to resolve host")) {
+                    binding.viewError.tvError.text =
+                        "$errorMessage \n\nPlease, check your Internet connection \nand try again!"
+                } else {
+                    binding.viewError.tvError.text = "$errorMessage"
+                }
+            }
+        )
+    }
+
+    private fun intentToAllMoviesActivity(category: Int) {
+        val intent = Intent(requireActivity(), AllTvSeriesActivity::class.java)
+        intent.putExtra(EXTRA_TV, category)
+        startActivity(intent)
+    }
+
+    private fun intentToDetailActivity(showModel: ShowModel) {
+        val intent = Intent(requireActivity(), DetailActivity::class.java)
+        intent.putExtra(EXTRA_DETAIL, showModel)
+        startActivity(intent)
     }
 }

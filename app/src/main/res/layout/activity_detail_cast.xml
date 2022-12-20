@@ -105,11 +105,11 @@
                 android:id="@+id/tv_title_dead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/dead"
-                android:visibility="gone"
-                android:textColor="@color/white"
                 android:layout_marginTop="8dp"
+                android:text="@string/dead"
+                android:textColor="@color/white"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/tv_biography"
                 app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -117,10 +117,10 @@
                 android:id="@+id/tv_dead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"
-                android:visibility="gone"
                 android:layout_marginLeft="8dp"
+                android:text="-"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_title_dead"
                 app:layout_constraintStart_toEndOf="@+id/tv_title_dead"
                 app:layout_constraintTop_toTopOf="@+id/tv_title_dead" />
@@ -129,8 +129,8 @@
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/known_as"
                 android:layout_marginTop="8dp"
+                android:text="@string/known_as"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/tv_title_dead"
@@ -167,6 +167,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
             <TextView
+                android:id="@+id/tv_view_all_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/view_all"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/textView12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+            <TextView
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -185,6 +195,16 @@
                 android:layout_marginTop="11dp"
                 app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+            <TextView
+                android:id="@+id/tv_view_all_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/view_all"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/textView13"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView13" />
 
             <include
                 android:id="@+id/view_loading"
@@ -222,9 +242,9 @@
                 android:id="@+id/tv_title_app"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:layout_marginLeft="36dp"
                 android:fontFamily="sans-serif-light"
-                 android:layout_marginLeft="36dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </androidx.appcompat.widget.Toolbar>

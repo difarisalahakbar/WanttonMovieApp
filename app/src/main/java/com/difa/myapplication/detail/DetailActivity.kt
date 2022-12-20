@@ -1,5 +1,6 @@
 package com.difa.myapplication.detail
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,7 +12,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.difa.myapplication.MainActivity
 import com.difa.myapplication.R
+import com.difa.myapplication.core.base.BaseActivity
 import com.difa.myapplication.core.data.Resource
 import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.ui.CastAdapter
@@ -21,9 +24,8 @@ import com.difa.myapplication.databinding.ActivityDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : BaseActivity<ActivityDetailBinding>() {
 
-    private lateinit var binding: ActivityDetailBinding
     private val detailViewModel: DetailViewModel by viewModels()
 
     private lateinit var adapter: CastAdapter
@@ -31,31 +33,41 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var currentShowModel: ShowModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDetailBinding.inflate(layoutInflater)
+    private var data: ShowModel? = null
+
+    override fun getViewBinding(): ActivityDetailBinding =
+        ActivityDetailBinding.inflate(layoutInflater)
+
+    override fun setupIntent() {
+        data = intent.getParcelableExtra(EXTRA_DETAIL)
+    }
+
+    override fun setupUI() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
-        supportActionBar?.title = ""
+        setupToolbar(binding.toolbar, "", false)
 
         setupRecyclerView()
+    }
 
-        val data = intent.getParcelableExtra<ShowModel>(EXTRA_DETAIL)
-
+    override fun setupAction() {
         binding.btnBack.setOnClickListener {
-            finish()
+            startActivity(Intent(this@DetailActivity, MainActivity::class.java))
         }
+    }
+
+    override fun setupProcess() {
         //setDetail from data local
         if (data != null) {
-            with(data) {
-                with(binding) {
-                    tvTitle.text = title
+            with(binding) {
+                with(data) {
+                    tvTitle.text = this!!.title
                     tvRate.text = voteAverage
-                    tvOverview.text = overview
+                    if(overview.isNotEmpty()){
+                        tvOverview.text = overview
+                    }else{
+                        tvOverview.text = "-"
+                    }
 
                     tvOverview.post {
                         val l = tvOverview.layout
@@ -83,7 +95,7 @@ class DetailActivity : AppCompatActivity() {
                     if (releaseDate != null && releaseDate != "" && releaseDate != "-") {
                         tvYear.text = releaseDate?.substring(0, 4)
                     }
-                    if (data.posterPath != "" && data.posterPath != null) {
+                    if (data!!.posterPath != "" && data!!.posterPath != null) {
                         Glide.with(this@DetailActivity)
                             .load(URL_IMAGE + posterPath)
                             .into(imgMovie)
@@ -95,203 +107,190 @@ class DetailActivity : AppCompatActivity() {
                             )
                         )
                     }
+                    setupSimilarShow(id, showType)
                 }
-                setupSimilarShow(id, showType)
             }
         }
 
+
+    }
+
+    override fun setupObserver() {
         when (data?.showType) {
-            MOVIE -> setupDetailMovie(data)
-            TV_SERIES -> setupDetailTv(data)
-        }
-    }
+            MOVIE -> {
+                if (data != null) {
+                    with(binding) {
+                        with(data) {
+                            //setDetail from new api response
+                            detailViewModel.getMovieDetail(this!!.id, category)
+                                .observes(this@DetailActivity,
+                                onLoading = {
+                                    viewLoading.root.visible()
+                                    cardMovie.gone()
+                                },
+                                onSuccess = {
+                                    viewLoading.root.gone()
+                                    cardMovie.visible()
+                                    currentShowModel = it
+                                    setFavorite(currentShowModel)
 
-    private fun setupSimilarShow(id: String, showType: Int) {
-        detailViewModel.getAllSimilarShow(id, showType).observe(this) { showModel ->
-            when (showModel) {
-                is Resource.Loading -> {
+                                    Glide.with(this@DetailActivity)
+                                        .load(URL_IMAGE_ORIGINAL + it.backdropPath)
+                                        .into(imgTimeline)
 
-                }
-                is Resource.Success -> {
-                    similarAdapter.setList(showModel.data, false)
-                }
-                is Resource.Error -> {
-                    Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG)
-                        .show()
+                                    if (it.genres1 != null) {
+                                        tvGenre1.text = it.genres1
+                                    }
+
+                                    if (it.genres2 != null) {
+                                        dot6.visible()
+                                        tvGenre2.visible()
+                                        tvGenre2.text = it.genres2
+                                    }
+
+                                    if (it.genres3 != null) {
+                                        dot7.visible()
+                                        tvGenre3.visible()
+                                        tvGenre3.text = it.genres3
+                                    }
+                                    val runtime = it.runtime
+                                    val duration =
+                                        if (runtime?.div(60)!! > 0 && runtime.mod(60) > 0) {
+                                            "${runtime.div(60)}h ${runtime.mod(60)}m"
+                                        } else if (runtime.div(60) == 0 && runtime.mod(
+                                                60
+                                            ) > 0
+                                        ) {
+                                            "${runtime.mod(60)}m"
+                                        } else if ((runtime.div(60) > 0 && runtime.mod(
+                                                60
+                                            ) == 0)
+                                        ) {
+                                            "${runtime.div(60)}h"
+                                        } else {
+                                            ""
+                                        }
+                                    tvDuration.text = duration
+                                },
+                                onError = {
+                                    viewLoading.root.gone()
+                                    cardMovie.visible()
+                                    Toast.makeText(
+                                        this@DetailActivity,
+                                        "$it",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                })
+
+                            //setDetailCast from new api response
+                            detailViewModel.getMovieCast(id)
+                                .observe(this@DetailActivity) { castModel ->
+                                    if (castModel != null) {
+                                        when (castModel) {
+                                            is Resource.Loading -> {
+
+                                            }
+                                            is Resource.Success -> {
+                                                if(castModel.data!!.isNotEmpty()){
+                                                    adapter.setList(castModel.data)
+                                                }else{
+                                                    binding.actor.gone()
+                                                }
+                                            }
+                                            is Resource.Error -> {
+                                                Toast.makeText(
+                                                    this@DetailActivity,
+                                                    "${castModel.message}",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+
+                                            }
+                                        }
+                                    }
+                                }
+                        }
+                    }
                 }
             }
-        }
-
-    }
-
-    private fun setupDetailTv(data: ShowModel?) {
-        if (data != null) {
-            with(data) {
-                with(binding) {
-                    //setDetail from new api response
-                    detailViewModel.getTvDetail(id, category)
-                        .observe(this@DetailActivity) { showModel ->
-                            if (showModel != null) {
-                                when (showModel) {
-                                    is Resource.Loading -> {
-                                        viewLoading.root.visibility = View.VISIBLE
-                                        cardMovie.visibility = View.GONE
-                                    }
-                                    is Resource.Success -> {
-                                        viewLoading.root.visibility = View.GONE
-                                        cardMovie.visibility = View.VISIBLE
-                                        currentShowModel = showModel.data!!
+            TV_SERIES -> {
+                if (data != null) {
+                    with(binding) {
+                        with(data) {
+                            //setDetail from new api response
+                            detailViewModel.getTvDetail(this!!.id, category)
+                                .observes(this@DetailActivity,
+                                    onLoading = {
+                                        viewLoading.root.visible()
+                                        cardMovie.gone()
+                                    },
+                                    onSuccess = {
+                                        viewLoading.root.gone()
+                                        cardMovie.visible()
+                                        currentShowModel = it
                                         setFavorite(currentShowModel)
 
                                         Glide.with(this@DetailActivity)
-                                            .load(URL_IMAGE_ORIGINAL + showModel.data.backdropPath)
+                                            .load(URL_IMAGE_ORIGINAL + it.backdropPath)
                                             .into(imgTimeline)
 
-                                        if (showModel.data.genres1 != null) {
-                                            tvGenre1.text = showModel.data.genres1
+                                        if (it.genres1 != null) {
+                                            tvGenre1.text = it.genres1
                                         }
 
-                                        if (showModel.data.genres2 != null) {
-                                            dot6.visibility = View.VISIBLE
-                                            tvGenre2.visibility = View.VISIBLE
-                                            tvGenre2.text = showModel.data.genres2
+                                        if (it.genres2 != null) {
+                                            dot6.visible()
+                                            tvGenre2.visible()
+                                            tvGenre2.text = it.genres2
                                         }
 
-                                        if (showModel.data.genres3 != null) {
-                                            dot7.visibility = View.VISIBLE
-                                            tvGenre3.visibility = View.VISIBLE
-                                            tvGenre3.text = showModel.data.genres3
+                                        if (it.genres3 != null) {
+                                            dot7.visible()
+                                            tvGenre3.visible()
+                                            tvGenre3.text = it.genres3
                                         }
                                         tvDuration.text = "N/A"
-                                    }
-                                    is Resource.Error -> {
-                                        cardMovie.visibility = View.VISIBLE
-                                        viewLoading.root.visibility = View.GONE
+                                    },
+                                    onError = {
+                                        cardMovie.visible()
+                                        viewLoading.root.gone()
                                         Toast.makeText(
                                             this@DetailActivity,
-                                            "${showModel.message}",
+                                            "$it",
                                             Toast.LENGTH_LONG
                                         ).show()
-                                    }
-                                }
-                            }
-                        }
+                                    })
 
-                    //setDetailCast from new api response
-                    detailViewModel.getTvCast(id).observe(this@DetailActivity) { castModel ->
-                        if (castModel != null) {
-                            when (castModel) {
-                                is Resource.Loading -> {
+                            //setDetailCast from new api response
+                            detailViewModel.getTvCast(id)
+                                .observe(this@DetailActivity) { castModel ->
+                                    if (castModel != null) {
+                                        when (castModel) {
+                                            is Resource.Loading -> {
 
-                                }
-                                is Resource.Success -> {
-                                    adapter.setList(castModel.data)
-                                }
-                                is Resource.Error -> {
-                                    Toast.makeText(
-                                        this@DetailActivity,
-                                        "${castModel.message}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun setupDetailMovie(data: ShowModel?) {
-        if (data != null) {
-            with(data) {
-                with(binding) {
-                    //setDetail from new api response
-                    detailViewModel.getMovieDetail(id, category)
-                        .observe(this@DetailActivity) { showModel ->
-                            if (showModel != null) {
-                                when (showModel) {
-                                    is Resource.Loading -> {
-                                        viewLoading.root.visibility = View.VISIBLE
-                                        cardMovie.visibility = View.GONE
-                                    }
-                                    is Resource.Success -> {
-                                        viewLoading.root.visibility = View.GONE
-                                        cardMovie.visibility = View.VISIBLE
-                                        currentShowModel = showModel.data!!
-                                        setFavorite(currentShowModel)
-
-                                        Glide.with(this@DetailActivity)
-                                            .load(URL_IMAGE_ORIGINAL + showModel.data.backdropPath)
-                                            .into(imgTimeline)
-
-                                        if (showModel.data.genres1 != null) {
-                                            tvGenre1.text = showModel.data.genres1
-                                        }
-
-                                        if (showModel.data.genres2 != null) {
-                                            dot6.visibility = View.VISIBLE
-                                            tvGenre2.visibility = View.VISIBLE
-                                            tvGenre2.text = showModel.data.genres2
-                                        }
-
-                                        if (showModel.data.genres3 != null) {
-                                            dot7.visibility = View.VISIBLE
-                                            tvGenre3.visibility = View.VISIBLE
-                                            tvGenre3.text = showModel.data.genres3
-                                        }
-                                        val runtime = showModel.data.runtime
-                                        val duration =
-                                            if (runtime?.div(60)!! > 0 && runtime.mod(60) > 0) {
-                                                "${runtime.div(60)}h ${runtime.mod(60)}m"
-                                            } else if (runtime.div(60) == 0 && runtime.mod(60) > 0) {
-                                                "${runtime.mod(60)}m"
-                                            } else if ((runtime.div(60) > 0 && runtime.mod(60) == 0)) {
-                                                "${runtime.div(60)}h"
-                                            } else {
-                                                ""
                                             }
-                                        tvDuration.text = duration
+                                            is Resource.Success -> {
+                                                if(castModel.data!!.isNotEmpty()){
+                                                    adapter.setList(castModel.data)
+                                                }else{
+                                                    binding.actor.gone()
+                                                }
+                                            }
+                                            is Resource.Error -> {
+                                                Toast.makeText(
+                                                    this@DetailActivity,
+                                                    "${castModel.message}",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        }
                                     }
-                                    is Resource.Error -> {
-                                        viewLoading.root.visibility = View.GONE
-                                        cardMovie.visibility = View.VISIBLE
-                                        Toast.makeText(
-                                            this@DetailActivity,
-                                            "${showModel.message}",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
                                 }
-                            }
-                        }
-
-                    //setDetailCast from new api response
-                    detailViewModel.getMovieCast(id).observe(this@DetailActivity) { castModel ->
-                        if (castModel != null) {
-                            when (castModel) {
-                                is Resource.Loading -> {
-
-                                }
-                                is Resource.Success -> {
-                                    adapter.setList(castModel.data)
-                                }
-                                is Resource.Error -> {
-                                    Toast.makeText(
-                                        this@DetailActivity,
-                                        "${castModel.message}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-
-                                }
-                            }
                         }
                     }
                 }
             }
         }
     }
-
 
     private fun setupRecyclerView() {
         similarAdapter = ShowAdapter {
@@ -350,4 +349,27 @@ class DetailActivity : AppCompatActivity() {
             )
         }
     }
+
+    private fun setupSimilarShow(id: String, showType: Int) {
+        detailViewModel.getAllSimilarShow(id, showType).observe(this) { showModel ->
+            when (showModel) {
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success -> {
+                    if(showModel.data!!.isNotEmpty()){
+                        similarAdapter.setList(showModel.data, false)
+                    }else{
+                        binding.tvSimilar.gone()
+                    }
+                }
+                is Resource.Error -> {
+                    Toast.makeText(this@DetailActivity, "${showModel.message}", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
+    }
+
+
 }

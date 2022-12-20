@@ -1,8 +1,6 @@
 package com.difa.myapplication.showall
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -10,8 +8,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.difa.myapplication.R
-import com.difa.myapplication.core.data.Resource
-import com.difa.myapplication.core.domain.model.ShowModel
+import com.difa.myapplication.core.base.BaseActivity
+ import com.difa.myapplication.core.domain.model.ShowModel
 import com.difa.myapplication.core.ui.ShowAllAdapter
 import com.difa.myapplication.core.utils.*
 import com.difa.myapplication.databinding.ActivityAllMoviesBinding
@@ -20,37 +18,18 @@ import com.difa.myapplication.item.MoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AllMoviesActivity : AppCompatActivity() {
+class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>() {
 
     private val moviesViewModel: MoviesViewModel by viewModels()
 
-    private lateinit var binding: ActivityAllMoviesBinding
-
     private lateinit var adapter: ShowAllAdapter
+    private var showModelFromCast: java.util.ArrayList<ShowModel>? = ArrayList()
+
+    private var isShowCastAdapter = false
 
     private var currentPage = 1
     private var maxPage = 6
     private val limit = 20
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAllMoviesBinding.inflate(layoutInflater)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
-        supportActionBar?.title = ""
-
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
-
-        setupRecyclerView()
-        setupAllMovies()
-
-    }
 
     private fun setupRecyclerView() {
         adapter = ShowAllAdapter{
@@ -65,7 +44,28 @@ class AllMoviesActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupAllMovies() {
+    override fun getViewBinding(): ActivityAllMoviesBinding =
+        ActivityAllMoviesBinding.inflate(layoutInflater)
+
+    override fun setupIntent() {
+        isShowCastAdapter = intent.getBooleanExtra(EXTRA_CAST_MOVIE, false)
+        showModelFromCast = intent.getParcelableArrayListExtra(EXTRA_MOVIE)
+    }
+
+    override fun setupUI() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        setupToolbar(binding.toolbar, "", false)
+
+        setupRecyclerView()
+    }
+
+    override fun setupAction() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+    }
+
+    override fun setupProcess() {
         moviesViewModel.setPage(currentPage)
 
         with(binding) {
@@ -82,89 +82,92 @@ class AllMoviesActivity : AppCompatActivity() {
                     }
                 })
         }
-        val isShowCastAdapter = intent.getBooleanExtra(EXTRA_CAST_MOVIE, false)
-        val showModelFromCast = intent.getParcelableArrayListExtra<ShowModel>(EXTRA_MOVIE)
+    }
 
-        if(isShowCastAdapter){
-            binding.progressBar.visibility = View.GONE
-            binding.tvNowPlaying.text = ""
-            adapter.setList(showModelFromCast)
-        }else{
-            when (intent.getIntExtra(EXTRA_MOVIE, 0)) {
-                POPULAR -> {
-                    binding.tvNowPlaying.text = getString(R.string.popular)
-                    moviesViewModel.getAllMovie(POPULAR, limit, this@AllMoviesActivity).observe(this) { movieList ->
-                        when (movieList) {
-                            is Resource.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                            }
+    override fun setupObserver() {
+        with(binding) {
+            if (isShowCastAdapter) {
+                progressBar.visibility = View.GONE
+                tvNowPlaying.text = ""
+                adapter.setList(showModelFromCast)
+            } else {
+                when (intent.getIntExtra(EXTRA_MOVIE, 0)) {
+                    POPULAR -> {
+                        tvNowPlaying.text = getString(R.string.popular)
+                        moviesViewModel.getAllMovie(POPULAR, limit, this@AllMoviesActivity)
+                            .observes(this@AllMoviesActivity,
+                                onLoading = {
+                                    progressBar.visible()
+                                },
+                                onSuccess = {
+                                    progressBar.gone()
 
-                            is Resource.Success -> {
-                                binding.progressBar.visibility = View.GONE
+                                    val data = it as ArrayList<ShowModel>
+                                    if (data.isNotEmpty()) {
+                                        adapter.setList(data)
+                                    }
+                                },
+                                onError = {
+                                    progressBar.gone()
+                                    Toast.makeText(
+                                        this@AllMoviesActivity,
+                                        "$it",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                })
+                    }
+                    TOP_RATED -> {
+                        tvNowPlaying.text = getString(R.string.top_rated)
+                        moviesViewModel.getAllMovie(TOP_RATED, limit, this@AllMoviesActivity)
+                            .observes(this@AllMoviesActivity,
+                                onLoading = {
+                                    progressBar.visible()
 
-                                val data = movieList.data as ArrayList<ShowModel>
-                                if (data.isNotEmpty()) {
-                                    adapter.setList(data)
-                                }
-                            }
+                                },
+                                onSuccess = {
+                                    progressBar.gone()
+                                    val data = it as ArrayList<ShowModel>
+                                    if (data.isNotEmpty()) {
+                                        adapter.setList(data)
+                                    }
+                                },
+                                onError = {
+                                    progressBar.gone()
+                                    Toast.makeText(
+                                        this@AllMoviesActivity,
+                                        "$it",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                })
 
-                            is Resource.Error -> {
-                                binding.progressBar.visibility = View.GONE
-                                Toast.makeText(this@AllMoviesActivity, "${movieList.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
+                    }
+                    else -> {
+                        moviesViewModel.getAllMovie(NOW_PLAYING, limit, this@AllMoviesActivity)
+                            .observes(this@AllMoviesActivity,
+                                onLoading = {
+                                    progressBar.visible()
+
+                                },
+                                onSuccess = {
+                                    progressBar.gone()
+                                    val data = it as ArrayList<ShowModel>
+                                    if (data.isNotEmpty()) {
+                                        adapter.setList(data)
+                                    }
+                                },
+                                onError = {
+                                    progressBar.gone()
+                                    Toast.makeText(
+                                        this@AllMoviesActivity,
+                                        "$it",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                })
                     }
                 }
-                TOP_RATED -> {
-                    binding.tvNowPlaying.text = getString(R.string.top_rated)
-                    moviesViewModel.getAllMovie(TOP_RATED, limit, this@AllMoviesActivity).observe(this) { movieList ->
-                        when (movieList) {
-                            is Resource.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                            }
 
-                            is Resource.Success -> {
-                                binding.progressBar.visibility = View.GONE
-                                val data = movieList.data as ArrayList<ShowModel>
-                                if (data.isNotEmpty()) {
-                                    adapter.setList(data)
-                                }
-                            }
-
-                            is Resource.Error -> {
-                                binding.progressBar.visibility = View.GONE
-                                Toast.makeText(this@AllMoviesActivity, "${movieList.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                }
-                else -> {
-                    moviesViewModel.getAllMovie(NOW_PLAYING, limit, this@AllMoviesActivity).observe(this) { movieList ->
-                        when (movieList) {
-                            is Resource.Loading -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                            }
-
-                            is Resource.Success -> {
-                                binding.progressBar.visibility = View.GONE
-
-                                val data = movieList.data as ArrayList<ShowModel>
-                                if (data.isNotEmpty()) {
-                                    adapter.setList(data)
-                                }
-                            }
-
-                            is Resource.Error -> {
-                                binding.progressBar.visibility = View.GONE
-                                Toast.makeText(this@AllMoviesActivity, "${movieList.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                }
             }
         }
-
-
     }
 
 

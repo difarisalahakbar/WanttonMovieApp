@@ -29,7 +29,7 @@ data class MovieItem(
 	val releaseDate: String,
 
 	@field:SerializedName("vote_average")
-	val voteAverage: Any,
+	val voteAverage: Any?,
 
 	//data update
 	@field:SerializedName("backdrop_path")

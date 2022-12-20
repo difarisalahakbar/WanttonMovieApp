@@ -54,4 +54,6 @@
     <string name="known_as">Known as:</string>
     <string name="list_movie">List Movie</string>
     <string name="list_tv_series">List Tv Series</string>
+    <string name="label_error">Error</string>
+    <string name="action_retry">Retry</string>
 </resources>

@@ -17,7 +17,7 @@ data class ShowModel(
 
     var releaseDate: String?,
 
-    var voteAverage: String,
+    var voteAverage: String?,
 
     //additional data
     var showType: Int,
