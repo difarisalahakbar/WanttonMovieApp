@@ -48,6 +48,8 @@
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/btn_design"
                 android:contentDescription="@string/cd_back"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 

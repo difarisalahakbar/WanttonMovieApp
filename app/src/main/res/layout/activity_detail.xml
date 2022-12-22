@@ -24,6 +24,7 @@
                 android:contentDescription="@string/cd_timeline"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -144,7 +145,7 @@
                 android:layout_marginTop="11dp"
                 android:layout_marginRight="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/btn_expand_shrink"
+                app:layout_constraintStart_toStartOf="@+id/btn_favorite"
                 app:layout_constraintTop_toBottomOf="@+id/btn_expand_shrink">
 
                 <TextView
@@ -230,12 +231,15 @@
 
             <TextView
                 android:id="@+id/btn_expand_shrink"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:background="@drawable/view_design"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/show_more"
-                android:textColor="@color/yellow"
                 android:visibility="gone"
+                android:textColor="@color/yellow"
+                app:layout_constraintEnd_toEndOf="@+id/tv_overview"
                 app:layout_constraintStart_toStartOf="@+id/tv_overview"
                 app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
 
@@ -332,7 +336,9 @@
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/btn_design"
                 android:contentDescription="@string/cd_back"
+                android:padding="8dp"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
         </androidx.appcompat.widget.Toolbar>
