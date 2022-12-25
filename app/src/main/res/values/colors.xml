@@ -12,5 +12,6 @@
     <color name="onPressed">#6D737373</color>
     <color name="yellow">#FFD600</color>
     <color name="transparent">#00000000</color>
+    <color name="onPressedItem">#75000000</color>
     <color name="search_color">#383838</color>
 </resources>
